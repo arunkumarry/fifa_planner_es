@@ -1,0 +1,49 @@
+hotel_id,name,stadium_id,latitude,longitude,price_per_night,rating
+"H_1","Atlanta City Center Suites","S_1",33.76273,-84.398179,270,4.3
+"H_2","Atlanta Boutique Airbnb","S_1",33.740794,-84.415335,106,3.7
+"H_3","Atlanta Grand Plaza","S_1",33.740323,-84.386219,235,4
+"H_4","Boston Garden Inn","S_2",42.098209,-71.256833,85,3.7
+"H_5","Boston City Center Suites","S_2",42.083063,-71.254413,266,4
+"H_6","Boston Boutique Airbnb","S_2",42.101268,-71.274949,156,4.5
+"H_7","Dallas Airport Express","S_3",32.766823,-97.102766,92,3.9
+"H_8","Dallas Garden Inn","S_3",32.743034,-97.099383,315,3.8
+"H_9","Dallas City Center Suites","S_3",32.743379,-97.110892,296,4.5
+"H_10","Houston Grand Plaza","S_4",29.668156,-95.398621,300,3.9
+"H_11","Houston Airport Express","S_4",29.704165,-95.405362,140,4.7
+"H_12","Houston Garden Inn","S_4",29.675158,-95.393012,234,4.9
+"H_13","Kansas City Boutique Airbnb","S_5",39.058442,-94.487438,185,4.1
+"H_14","Kansas City Grand Plaza","S_5",39.059003,-94.477724,94,4.7
+"H_15","Kansas City Airport Express","S_5",39.045918,-94.478571,137,3.9
+"H_16","Los Angeles City Center Suites","S_6",33.967528,-118.331646,289,4
+"H_17","Los Angeles Boutique Airbnb","S_6",33.961606,-118.345213,179,4.7
+"H_18","Los Angeles Grand Plaza","S_6",33.957929,-118.352592,323,3.6
+"H_19","Miami Garden Inn","S_7",25.969455,-80.234755,259,3.6
+"H_20","Miami City Center Suites","S_7",25.9395,-80.234973,217,3.9
+"H_21","Miami Boutique Airbnb","S_7",25.93931,-80.23708,199,4.8
+"H_22","New York/New Jersey Airport Express","S_8",40.812956,-74.058892,253,4.6
+"H_23","New York/New Jersey Garden Inn","S_8",40.795489,-74.086811,102,4.1
+"H_24","New York/New Jersey City Center Suites","S_8",40.805323,-74.065025,87,3.8
+"H_25","Philadelphia Grand Plaza","S_9",39.883124,-75.155794,212,4.2
+"H_26","Philadelphia Airport Express","S_9",39.916491,-75.181616,279,4.6
+"H_27","Philadelphia Garden Inn","S_9",39.911895,-75.187089,211,4.3
+"H_28","San Francisco Bay Area Boutique Airbnb","S_10",37.39709,-121.979338,293,4.9
+"H_29","San Francisco Bay Area Grand Plaza","S_10",37.406,-121.984676,148,4.2
+"H_30","San Francisco Bay Area Airport Express","S_10",37.420996,-121.972725,317,4.8
+"H_31","Seattle City Center Suites","S_11",47.614368,-122.320711,168,3.5
+"H_32","Seattle Boutique Airbnb","S_11",47.57757,-122.325618,191,4.4
+"H_33","Seattle Grand Plaza","S_11",47.605805,-122.31666,88,3.6
+"H_34","Toronto Garden Inn","S_12",43.613485,-79.419422,123,4.5
+"H_35","Toronto City Center Suites","S_12",43.65172,-79.406805,98,4
+"H_36","Toronto Boutique Airbnb","S_12",43.619933,-79.436305,310,4.7
+"H_37","Vancouver Airport Express","S_13",49.267162,-123.120486,186,4.2
+"H_38","Vancouver Garden Inn","S_13",49.269308,-123.104459,291,4.1
+"H_39","Vancouver City Center Suites","S_13",49.264603,-123.128995,99,4.7
+"H_40","Guadalajara Grand Plaza","S_14",20.675139,-103.445513,187,3.8
+"H_41","Guadalajara Airport Express","S_14",20.672099,-103.472477,174,3.7
+"H_42","Guadalajara Garden Inn","S_14",20.672587,-103.450103,225,4.1
+"H_43","Mexico City Boutique Airbnb","S_15",19.283179,-99.133957,107,4.2
+"H_44","Mexico City Grand Plaza","S_15",19.290789,-99.15133,188,3.8
+"H_45","Mexico City Airport Express","S_15",19.305385,-99.151612,222,4.1
+"H_46","Monterrey City Center Suites","S_16",25.675314,-100.261759,320,3.9
+"H_47","Monterrey Boutique Airbnb","S_16",25.678238,-100.24739,215,4.1
+"H_48","Monterrey Grand Plaza","S_16",25.685831,-100.24688,117,4.4

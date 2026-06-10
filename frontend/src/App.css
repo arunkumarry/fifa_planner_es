@@ -1,0 +1,608 @@
+.app-container {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Sidebar Chat Styles */
+.chat-sidebar {
+  background: rgba(18, 20, 26, 0.95);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* Keep content within the viewport height */
+}
+
+.chat-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-header h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.chat-messages {
+  flex: 1 1 0%;
+  min-height: 0; /* Required to let flex item shrink and scroll */
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.message-bubble {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.message-bubble.user {
+  background: var(--color-secondary);
+  color: #000;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+  font-weight: 500;
+}
+
+.message-bubble.agent {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--color-text-main);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+
+.message-bubble.system {
+  background: rgba(0, 242, 254, 0.05);
+  border: 1px dashed rgba(0, 242, 254, 0.2);
+  color: var(--color-primary);
+  align-self: center;
+  text-align: center;
+  max-width: 95%;
+  font-size: 0.85rem;
+}
+
+.chat-input-area {
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: 8px;
+}
+
+.chat-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-input:focus {
+  border-color: var(--color-primary);
+}
+
+.send-btn {
+  background: var(--color-primary);
+  border: none;
+  color: #000;
+  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.send-btn:hover {
+  opacity: 0.9;
+}
+
+/* Dashboard Panel Styles */
+.dashboard-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  padding: 24px;
+  gap: 24px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 16px;
+}
+
+.selector-label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.match-select {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  outline: none;
+  min-width: 250px;
+}
+
+.match-select:focus {
+  border-color: var(--color-primary);
+}
+
+/* Grid Layout for Widgets */
+.widgets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* Match Header Banner */
+.match-banner-card {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(22, 26, 37, 0.8) 0%, rgba(18, 20, 26, 0.9) 100%);
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.match-banner-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--color-primary);
+}
+
+.match-vs-display {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.team-block {
+  text-align: center;
+}
+
+.team-name {
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.vs-badge {
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.match-meta-info {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.meta-item.city-time {
+  font-family: 'Orbitron', sans-serif;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+/* Stadium capacity visualizer */
+.stadium-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stadium-graphic {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  height: 150px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.stadium-ring {
+  width: 120px;
+  height: 80px;
+  border: 6px double rgba(0, 242, 254, 0.4);
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
+}
+
+.stadium-field {
+  width: 70px;
+  height: 40px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid #10b981;
+  border-radius: 4px;
+}
+
+.stadium-capacity-number {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.booking-text {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+}
+
+/* Accommodations Widget */
+.hotels-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hotel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hotel-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.2s;
+}
+
+.hotel-item:hover {
+  border-color: rgba(0, 242, 254, 0.25);
+}
+
+.hotel-info h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.hotel-rating-price {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.star-rating {
+  color: var(--color-warning);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.hotel-price {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.hotel-travel-eta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.eta-badge.driving {
+  background: rgba(79, 172, 254, 0.15);
+  color: var(--color-secondary);
+}
+
+/* Weather Widget */
+.weather-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.weather-cards-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.weather-metric-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.weather-metric-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.weather-metric-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.weather-desc-card {
+  grid-column: 1 / -1;
+  background: rgba(0, 242, 254, 0.03);
+  border: 1px solid var(--border-glow);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+/* Responsive Overrides */
+@media (max-width: 900px) {
+  .app-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    height: auto;
+    overflow: visible;
+  }
+  .chat-sidebar {
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .chat-messages {
+    max-height: 350px;
+    overflow-y: auto;
+  }
+  .dashboard-main {
+    height: auto;
+    overflow-y: visible;
+  }
+}
+
+/* Unified UI Component Classes */
+.status-indicator {
+  font-size: 0.75rem;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  display: inline-block;
+}
+
+.message-sender-agent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.message-sender-user {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  color: #000;
+  font-weight: 600;
+}
+
+.message-text {
+  white-space: pre-line;
+}
+
+.console-container {
+  background: #040508;
+  border-top: 1px solid var(--border-color);
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.console-header-bar {
+  background: #0c0d12;
+  padding: 6px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--color-text-muted);
+}
+
+.console-title-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #00f2fe;
+}
+
+.console-hide-btn {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+}
+
+.console-logs-viewport {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.console-log-row {
+  line-break: anywhere;
+}
+
+.console-log-time {
+  color: #71717a;
+  margin-right: 6px;
+}
+
+.console-show-btn {
+  background: #0c0d12;
+  border: none;
+  border-top: 1px solid var(--border-color);
+  padding: 6px;
+  color: var(--color-primary);
+  font-family: monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Matchup Widget Styles */
+.matchup-widget {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.matchup-team-side {
+  text-align: center;
+}
+
+.matchup-team-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.matchup-metrics-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.matchup-row {
+  display: grid;
+  grid-template-columns: 1fr 180px 1fr;
+  align-items: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.01);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.matchup-val-left {
+  text-align: right;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+.matchup-val-right {
+  text-align: left;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.matchup-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+

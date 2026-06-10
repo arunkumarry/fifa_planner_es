@@ -1,0 +1,22 @@
+{
+  "name": "fifa-match-day-planner",
+  "version": "1.0.0",
+  "description": "FIFA 2026 Match Day AI Planner Agent & MCP Server",
+  "main": "dist/mcp-server/index.js",
+  "scripts": {
+    "build": "tsc",
+    "ingest": "ts-node scripts/ingest.ts",
+    "start-mcp": "ts-node mcp-server/index.ts"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.13.0",
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
