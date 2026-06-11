@@ -29,6 +29,25 @@ if (isConfigured) {
   console.warn('⚠️ Warning: Elasticsearch credentials not configured. MCP tools will return mock data.');
 }
 
+const STADIUM_COORDINATES: Record<string, { lat: number, lon: number }> = {
+  "S_1": { lat: 33.7554, lon: -84.4008 },
+  "S_2": { lat: 42.0909, lon: -71.2643 },
+  "S_3": { lat: 32.7473, lon: -97.0945 },
+  "S_4": { lat: 29.6847, lon: -95.4107 },
+  "S_5": { lat: 39.0489, lon: -94.4839 },
+  "S_6": { lat: 33.9534, lon: -118.3387 },
+  "S_7": { lat: 25.9580, lon: -80.2389 },
+  "S_8": { lat: 40.8128, lon: -74.0742 },
+  "S_9": { lat: 39.9012, lon: -75.1675 },
+  "S_10": { lat: 37.4032, lon: -121.9698 },
+  "S_11": { lat: 47.5952, lon: -122.3316 },
+  "S_12": { lat: 43.6332, lon: -79.4186 },
+  "S_13": { lat: 49.2768, lon: -123.1120 },
+  "S_14": { lat: 20.6817, lon: -103.4628 },
+  "S_15": { lat: 19.3029, lon: -99.1505 },
+  "S_16": { lat: 25.6700, lon: -100.2444 }
+};
+
 const server = new Server(
   {
     name: 'fifa-match-day-planner-mcp',
@@ -105,7 +124,34 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               default: 15
             }
           },
-          required: ['latitude', 'longitude']
+          required: []
+        }
+      },
+      {
+        name: 'find_nearby_hospitals',
+        description: 'Find hospitals near a specific location using geo-distance search, sorted by proximity.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            latitude: {
+              type: 'number',
+              description: 'Latitude'
+            },
+            longitude: {
+              type: 'number',
+              description: 'Longitude'
+            },
+            stadium_id: {
+              type: 'string',
+              description: 'Optional stadium ID to auto-resolve coordinates'
+            },
+            max_distance_km: {
+              type: 'number',
+              description: 'Max radius to search (defaults to 15km)',
+              default: 15
+            }
+          },
+          required: []
         }
       },
       {
@@ -343,7 +389,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       const response = await esClient.search({
-        index: 'fifa_matches',
+        index: 'fifa_matches_complete',
         body: {
           query: must.length > 0 ? { bool: { must } } : { match_all: {} }
         }
@@ -406,9 +452,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     // Tool: find_nearby_accommodations
     // ----------------------------------------------------
     if (name === 'find_nearby_accommodations') {
-      const lat = args?.latitude as number;
-      const lon = args?.longitude as number;
+      let lat = args?.latitude as number;
+      let lon = args?.longitude as number;
+      const stadiumId = args?.stadium_id as string;
       const maxDistance = (args?.max_distance_km as number) || 15;
+
+      if (!lat || !lon) {
+        if (stadiumId && STADIUM_COORDINATES[stadiumId]) {
+          lat = STADIUM_COORDINATES[stadiumId].lat;
+          lon = STADIUM_COORDINATES[stadiumId].lon;
+        } else {
+          return { content: [{ type: 'text', text: 'Error: Must provide latitude/longitude or a valid stadium_id.' }], isError: true };
+        }
+      }
 
       if (!esClient) {
         // Fallback Mock Data
@@ -462,6 +518,68 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       return {
         content: [{ type: 'text', text: JSON.stringify({ accommodations: hotels }, null, 2) }]
+      };
+    }
+
+    // ----------------------------------------------------
+    // Tool: find_nearby_hospitals
+    // ----------------------------------------------------
+    if (name === 'find_nearby_hospitals') {
+      let lat = args?.latitude as number;
+      let lon = args?.longitude as number;
+      const stadiumId = args?.stadium_id as string;
+      const maxDistance = (args?.max_distance_km as number) || 15;
+
+      if (!lat || !lon) {
+        if (stadiumId && STADIUM_COORDINATES[stadiumId]) {
+          lat = STADIUM_COORDINATES[stadiumId].lat;
+          lon = STADIUM_COORDINATES[stadiumId].lon;
+        } else {
+          return { content: [{ type: 'text', text: 'Error: Must provide latitude/longitude or a valid stadium_id.' }], isError: true };
+        }
+      }
+
+      if (!esClient) {
+        return {
+          content: [{ type: 'text', text: 'Error: Elasticsearch client not initialized.' }],
+          isError: true
+        };
+      }
+
+      const response = await esClient.search({
+        index: 'fifa_hospitals',
+        body: {
+          query: {
+            bool: {
+              must: { match_all: {} },
+              filter: {
+                geo_distance: {
+                  distance: `${maxDistance}km`,
+                  location: { lat, lon }
+                }
+              }
+            }
+          },
+          sort: [
+            {
+              _geo_distance: {
+                location: { lat, lon },
+                order: 'asc',
+                unit: 'km',
+                distance_type: 'plane'
+              }
+            }
+          ]
+        }
+      });
+
+      const hospitals = response.hits.hits.map((hit: any) => ({
+        ...hit._source,
+        distance_km: parseFloat(hit.sort[0].toFixed(2))
+      }));
+
+      return {
+        content: [{ type: 'text', text: JSON.stringify({ hospitals }, null, 2) }]
       };
     }
 

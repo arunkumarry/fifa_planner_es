@@ -1,0 +1,105 @@
+match_id,date,date_int,kickoff_at,team_1,team_2,teams_combined,stadium_id,stadium,city,stadium_location,stage,match_display,month,month_num
+M_1,2026-06-11T00:00:00Z,20260611,15:00:00-06,Mexico,South Africa,Mexico|South Africa,S_15,Estadio Azteca,Mexico City,POINT(-99.1505 19.3029),Group Stage,Mexico vs South Africa - Group Stage,June,6
+M_2,2026-06-11T00:00:00Z,20260611,22:00:00-06,South Korea,Winner UEFA Playoff D,South Korea|Winner UEFA Playoff D,S_14,Estadio Akron,Guadalajara,POINT(-103.4628 20.6817),Group Stage,South Korea vs Winner UEFA Playoff D - Group Stage,June,6
+M_3,2026-06-12T00:00:00Z,20260612,15:00:00-04,Canada,Winner UEFA Playoff A,Canada|Winner UEFA Playoff A,S_12,BMO Field,Toronto,POINT(-79.4186 43.6332),Group Stage,Canada vs Winner UEFA Playoff A - Group Stage,June,6
+M_4,2026-06-12T00:00:00Z,20260612,21:00:00-07,USA,Paraguay,USA|Paraguay,S_6,SoFi Stadium,Los Angeles,POINT(-118.3387 33.9534),Group Stage,USA vs Paraguay - Group Stage,June,6
+M_5,2026-06-13T00:00:00Z,20260613,15:00:00-07,Qatar,Switzerland,Qatar|Switzerland,S_10,Levi's Stadium,San Francisco Bay Area,POINT(-121.9698 37.4032),Group Stage,Qatar vs Switzerland - Group Stage,June,6
+M_6,2026-06-13T00:00:00Z,20260613,18:00:00-04,Brazil,Morocco,Brazil|Morocco,S_8,MetLife Stadium,New York/New Jersey,POINT(-74.0742 40.8128),Group Stage,Brazil vs Morocco - Group Stage,June,6
+M_7,2026-06-13T00:00:00Z,20260613,21:00:00-04,Haiti,Scotland,Haiti|Scotland,S_2,Gillette Stadium,Boston,POINT(-71.2643 42.0909),Group Stage,Haiti vs Scotland - Group Stage,June,6
+M_8,2026-06-14T00:00:00Z,20260614,00:00:00-07,Australia,Winner UEFA Playoff C,Australia|Winner UEFA Playoff C,S_13,BC Place,Vancouver,POINT(-123.112 49.2768),Group Stage,Australia vs Winner UEFA Playoff C - Group Stage,June,6
+M_9,2026-06-14T00:00:00Z,20260614,13:00:00-05,Germany,Curaçao,Germany|Curaçao,S_4,NRG Stadium,Houston,POINT(-95.4107 29.6847),Group Stage,Germany vs Curaçao - Group Stage,June,6
+M_10,2026-06-14T00:00:00Z,20260614,16:00:00-05,Netherlands,Japan,Netherlands|Japan,S_3,AT&T Stadium,Dallas,POINT(-97.0945 32.7473),Group Stage,Netherlands vs Japan - Group Stage,June,6
+M_11,2026-06-14T00:00:00Z,20260614,19:00:00-04,Côte d'Ivoire,Ecuador,Côte d'Ivoire|Ecuador,S_9,Lincoln Financial Field,Philadelphia,POINT(-75.1675 39.9012),Group Stage,Côte d'Ivoire vs Ecuador - Group Stage,June,6
+M_12,2026-06-14T00:00:00Z,20260614,22:00:00-06,Winner UEFA Playoff B,Tunisia,Winner UEFA Playoff B|Tunisia,S_16,Estadio BBVA,Monterrey,POINT(-100.2444 25.67),Group Stage,Winner UEFA Playoff B vs Tunisia - Group Stage,June,6
+M_13,2026-06-15T00:00:00Z,20260615,12:00:00-04,Spain,Cabo Verde,Spain|Cabo Verde,S_1,Mercedes-Benz Stadium,Atlanta,POINT(-84.4008 33.7554),Group Stage,Spain vs Cabo Verde - Group Stage,June,6
+M_14,2026-06-15T00:00:00Z,20260615,15:00:00-07,Belgium,Egypt,Belgium|Egypt,S_11,Lumen Field,Seattle,POINT(-122.3316 47.5952),Group Stage,Belgium vs Egypt - Group Stage,June,6
+M_15,2026-06-15T00:00:00Z,20260615,18:00:00-04,Saudi Arabia,Uruguay,Saudi Arabia|Uruguay,S_7,Hard Rock Stadium,Miami,POINT(-80.2389 25.958),Group Stage,Saudi Arabia vs Uruguay - Group Stage,June,6
+M_16,2026-06-15T00:00:00Z,20260615,21:00:00-07,IR Iran,New Zealand,IR Iran|New Zealand,S_6,SoFi Stadium,Los Angeles,POINT(-118.3387 33.9534),Group Stage,IR Iran vs New Zealand - Group Stage,June,6
+M_17,2026-06-16T00:00:00Z,20260616,15:00:00-04,France,Senegal,France|Senegal,S_8,MetLife Stadium,New York/New Jersey,POINT(-74.0742 40.8128),Group Stage,France vs Senegal - Group Stage,June,6
+M_18,2026-06-16T00:00:00Z,20260616,18:00:00-04,Winner FIFA Playoff 2,Norway,Winner FIFA Playoff 2|Norway,S_2,Gillette Stadium,Boston,POINT(-71.2643 42.0909),Group Stage,Winner FIFA Playoff 2 vs Norway - Group Stage,June,6
+M_19,2026-06-16T00:00:00Z,20260616,21:00:00-05,Argentina,Algeria,Argentina|Algeria,S_5,Arrowhead Stadium,Kansas City,POINT(-94.4839 39.0489),Group Stage,Argentina vs Algeria - Group Stage,June,6
+M_20,2026-06-17T00:00:00Z,20260617,00:00:00-07,Austria,Jordan,Austria|Jordan,S_10,Levi's Stadium,San Francisco Bay Area,POINT(-121.9698 37.4032),Group Stage,Austria vs Jordan - Group Stage,June,6
+M_21,2026-06-17T00:00:00Z,20260617,13:00:00-05,Portugal,Winner FIFA Playoff 1,Portugal|Winner FIFA Playoff 1,S_4,NRG Stadium,Houston,POINT(-95.4107 29.6847),Group Stage,Portugal vs Winner FIFA Playoff 1 - Group Stage,June,6
+M_22,2026-06-17T00:00:00Z,20260617,16:00:00-05,England,Croatia,England|Croatia,S_3,AT&T Stadium,Dallas,POINT(-97.0945 32.7473),Group Stage,England vs Croatia - Group Stage,June,6
+M_23,2026-06-17T00:00:00Z,20260617,19:00:00-04,Ghana,Panama,Ghana|Panama,S_12,BMO Field,Toronto,POINT(-79.4186 43.6332),Group Stage,Ghana vs Panama - Group Stage,June,6
+M_24,2026-06-17T00:00:00Z,20260617,22:00:00-06,Uzbekistan,Colombia,Uzbekistan|Colombia,S_15,Estadio Azteca,Mexico City,POINT(-99.1505 19.3029),Group Stage,Uzbekistan vs Colombia - Group Stage,June,6
+M_25,2026-06-18T00:00:00Z,20260618,12:00:00-04,Winner UEFA Playoff D,South Africa,Winner UEFA Playoff D|South Africa,S_1,Mercedes-Benz Stadium,Atlanta,POINT(-84.4008 33.7554),Group Stage,Winner UEFA Playoff D vs South Africa - Group Stage,June,6
+M_26,2026-06-18T00:00:00Z,20260618,15:00:00-07,Switzerland,Winner UEFA Playoff A,Switzerland|Winner UEFA Playoff A,S_6,SoFi Stadium,Los Angeles,POINT(-118.3387 33.9534),Group Stage,Switzerland vs Winner UEFA Playoff A - Group Stage,June,6
+M_27,2026-06-18T00:00:00Z,20260618,18:00:00-07,Canada,Qatar,Canada|Qatar,S_13,BC Place,Vancouver,POINT(-123.112 49.2768),Group Stage,Canada vs Qatar - Group Stage,June,6
+M_28,2026-06-18T00:00:00Z,20260618,21:00:00-06,Mexico,South Korea,Mexico|South Korea,S_14,Estadio Akron,Guadalajara,POINT(-103.4628 20.6817),Group Stage,Mexico vs South Korea - Group Stage,June,6
+M_29,2026-06-19T00:00:00Z,20260619,15:00:00-07,USA,Australia,USA|Australia,S_11,Lumen Field,Seattle,POINT(-122.3316 47.5952),Group Stage,USA vs Australia - Group Stage,June,6
+M_30,2026-06-19T00:00:00Z,20260619,18:00:00-04,Scotland,Morocco,Scotland|Morocco,S_2,Gillette Stadium,Boston,POINT(-71.2643 42.0909),Group Stage,Scotland vs Morocco - Group Stage,June,6
+M_31,2026-06-19T00:00:00Z,20260619,21:00:00-04,Brazil,Haiti,Brazil|Haiti,S_9,Lincoln Financial Field,Philadelphia,POINT(-75.1675 39.9012),Group Stage,Brazil vs Haiti - Group Stage,June,6
+M_32,2026-06-20T00:00:00Z,20260620,00:00:00-07,Winner UEFA Playoff C,Paraguay,Winner UEFA Playoff C|Paraguay,S_10,Levi's Stadium,San Francisco Bay Area,POINT(-121.9698 37.4032),Group Stage,Winner UEFA Playoff C vs Paraguay - Group Stage,June,6
+M_33,2026-06-20T00:00:00Z,20260620,13:00:00-05,Netherlands,Winner UEFA Playoff B,Netherlands|Winner UEFA Playoff B,S_4,NRG Stadium,Houston,POINT(-95.4107 29.6847),Group Stage,Netherlands vs Winner UEFA Playoff B - Group Stage,June,6
+M_34,2026-06-20T00:00:00Z,20260620,16:00:00-04,Germany,Côte d'Ivoire,Germany|Côte d'Ivoire,S_12,BMO Field,Toronto,POINT(-79.4186 43.6332),Group Stage,Germany vs Côte d'Ivoire - Group Stage,June,6
+M_35,2026-06-20T00:00:00Z,20260620,20:00:00-05,Ecuador,Curaçao,Ecuador|Curaçao,S_5,Arrowhead Stadium,Kansas City,POINT(-94.4839 39.0489),Group Stage,Ecuador vs Curaçao - Group Stage,June,6
+M_36,2026-06-21T00:00:00Z,20260621,00:00:00-06,Tunisia,Japan,Tunisia|Japan,S_16,Estadio BBVA,Monterrey,POINT(-100.2444 25.67),Group Stage,Tunisia vs Japan - Group Stage,June,6
+M_37,2026-06-21T00:00:00Z,20260621,12:00:00-04,Spain,Saudi Arabia,Spain|Saudi Arabia,S_1,Mercedes-Benz Stadium,Atlanta,POINT(-84.4008 33.7554),Group Stage,Spain vs Saudi Arabia - Group Stage,June,6
+M_38,2026-06-21T00:00:00Z,20260621,15:00:00-07,Belgium,IR Iran,Belgium|IR Iran,S_6,SoFi Stadium,Los Angeles,POINT(-118.3387 33.9534),Group Stage,Belgium vs IR Iran - Group Stage,June,6
+M_39,2026-06-21T00:00:00Z,20260621,18:00:00-04,Uruguay,Cabo Verde,Uruguay|Cabo Verde,S_7,Hard Rock Stadium,Miami,POINT(-80.2389 25.958),Group Stage,Uruguay vs Cabo Verde - Group Stage,June,6
+M_40,2026-06-21T00:00:00Z,20260621,21:00:00-07,New Zealand,Egypt,New Zealand|Egypt,S_13,BC Place,Vancouver,POINT(-123.112 49.2768),Group Stage,New Zealand vs Egypt - Group Stage,June,6
+M_41,2026-06-22T00:00:00Z,20260622,13:00:00-05,Argentina,Austria,Argentina|Austria,S_3,AT&T Stadium,Dallas,POINT(-97.0945 32.7473),Group Stage,Argentina vs Austria - Group Stage,June,6
+M_42,2026-06-22T00:00:00Z,20260622,17:00:00-04,France,Winner FIFA Playoff 2,France|Winner FIFA Playoff 2,S_9,Lincoln Financial Field,Philadelphia,POINT(-75.1675 39.9012),Group Stage,France vs Winner FIFA Playoff 2 - Group Stage,June,6
+M_43,2026-06-22T00:00:00Z,20260622,20:00:00-04,Norway,Senegal,Norway|Senegal,S_8,MetLife Stadium,New York/New Jersey,POINT(-74.0742 40.8128),Group Stage,Norway vs Senegal - Group Stage,June,6
+M_44,2026-06-22T00:00:00Z,20260622,23:00:00-07,Jordan,Algeria,Jordan|Algeria,S_10,Levi's Stadium,San Francisco Bay Area,POINT(-121.9698 37.4032),Group Stage,Jordan vs Algeria - Group Stage,June,6
+M_45,2026-06-23T00:00:00Z,20260623,13:00:00-05,Portugal,Uzbekistan,Portugal|Uzbekistan,S_4,NRG Stadium,Houston,POINT(-95.4107 29.6847),Group Stage,Portugal vs Uzbekistan - Group Stage,June,6
+M_46,2026-06-23T00:00:00Z,20260623,16:00:00-04,England,Ghana,England|Ghana,S_2,Gillette Stadium,Boston,POINT(-71.2643 42.0909),Group Stage,England vs Ghana - Group Stage,June,6
+M_47,2026-06-23T00:00:00Z,20260623,19:00:00-04,Panama,Croatia,Panama|Croatia,S_12,BMO Field,Toronto,POINT(-79.4186 43.6332),Group Stage,Panama vs Croatia - Group Stage,June,6
+M_48,2026-06-23T00:00:00Z,20260623,22:00:00-06,Colombia,Winner FIFA Playoff 1,Colombia|Winner FIFA Playoff 1,S_14,Estadio Akron,Guadalajara,POINT(-103.4628 20.6817),Group Stage,Colombia vs Winner FIFA Playoff 1 - Group Stage,June,6
+M_49,2026-06-24T00:00:00Z,20260624,15:00:00-07,Switzerland,Canada,Switzerland|Canada,S_13,BC Place,Vancouver,POINT(-123.112 49.2768),Group Stage,Switzerland vs Canada - Group Stage,June,6
+M_50,2026-06-24T00:00:00Z,20260624,15:00:00-07,Winner UEFA Playoff A,Qatar,Winner UEFA Playoff A|Qatar,S_11,Lumen Field,Seattle,POINT(-122.3316 47.5952),Group Stage,Winner UEFA Playoff A vs Qatar - Group Stage,June,6
+M_51,2026-06-24T00:00:00Z,20260624,18:00:00-04,Scotland,Brazil,Scotland|Brazil,S_7,Hard Rock Stadium,Miami,POINT(-80.2389 25.958),Group Stage,Scotland vs Brazil - Group Stage,June,6
+M_52,2026-06-24T00:00:00Z,20260624,18:00:00-04,Morocco,Haiti,Morocco|Haiti,S_1,Mercedes-Benz Stadium,Atlanta,POINT(-84.4008 33.7554),Group Stage,Morocco vs Haiti - Group Stage,June,6
+M_53,2026-06-24T00:00:00Z,20260624,21:00:00-06,Winner UEFA Playoff D,Mexico,Winner UEFA Playoff D|Mexico,S_15,Estadio Azteca,Mexico City,POINT(-99.1505 19.3029),Group Stage,Winner UEFA Playoff D vs Mexico - Group Stage,June,6
+M_54,2026-06-24T00:00:00Z,20260624,21:00:00-06,South Africa,South Korea,South Africa|South Korea,S_16,Estadio BBVA,Monterrey,POINT(-100.2444 25.67),Group Stage,South Africa vs South Korea - Group Stage,June,6
+M_55,2026-06-25T00:00:00Z,20260625,16:00:00-04,Curaçao,Côte d'Ivoire,Curaçao|Côte d'Ivoire,S_9,Lincoln Financial Field,Philadelphia,POINT(-75.1675 39.9012),Group Stage,Curaçao vs Côte d'Ivoire - Group Stage,June,6
+M_56,2026-06-25T00:00:00Z,20260625,16:00:00-04,Ecuador,Germany,Ecuador|Germany,S_8,MetLife Stadium,New York/New Jersey,POINT(-74.0742 40.8128),Group Stage,Ecuador vs Germany - Group Stage,June,6
+M_57,2026-06-25T00:00:00Z,20260625,19:00:00-05,Japan,Winner UEFA Playoff B,Japan|Winner UEFA Playoff B,S_3,AT&T Stadium,Dallas,POINT(-97.0945 32.7473),Group Stage,Japan vs Winner UEFA Playoff B - Group Stage,June,6
+M_58,2026-06-25T00:00:00Z,20260625,19:00:00-05,Tunisia,Netherlands,Tunisia|Netherlands,S_5,Arrowhead Stadium,Kansas City,POINT(-94.4839 39.0489),Group Stage,Tunisia vs Netherlands - Group Stage,June,6
+M_59,2026-06-25T00:00:00Z,20260625,22:00:00-07,Winner UEFA Playoff C,USA,Winner UEFA Playoff C|USA,S_6,SoFi Stadium,Los Angeles,POINT(-118.3387 33.9534),Group Stage,Winner UEFA Playoff C vs USA - Group Stage,June,6
+M_60,2026-06-25T00:00:00Z,20260625,22:00:00-07,Paraguay,Australia,Paraguay|Australia,S_10,Levi's Stadium,San Francisco Bay Area,POINT(-121.9698 37.4032),Group Stage,Paraguay vs Australia - Group Stage,June,6
+M_61,2026-06-26T00:00:00Z,20260626,15:00:00-04,Norway,France,Norway|France,S_2,Gillette Stadium,Boston,POINT(-71.2643 42.0909),Group Stage,Norway vs France - Group Stage,June,6
+M_62,2026-06-26T00:00:00Z,20260626,15:00:00-04,Senegal,Winner FIFA Playoff 2,Senegal|Winner FIFA Playoff 2,S_12,BMO Field,Toronto,POINT(-79.4186 43.6332),Group Stage,Senegal vs Winner FIFA Playoff 2 - Group Stage,June,6
+M_63,2026-06-26T00:00:00Z,20260626,20:00:00-05,Cabo Verde,Saudi Arabia,Cabo Verde|Saudi Arabia,S_4,NRG Stadium,Houston,POINT(-95.4107 29.6847),Group Stage,Cabo Verde vs Saudi Arabia - Group Stage,June,6
+M_64,2026-06-26T00:00:00Z,20260626,20:00:00-06,Uruguay,Spain,Uruguay|Spain,S_14,Estadio Akron,Guadalajara,POINT(-103.4628 20.6817),Group Stage,Uruguay vs Spain - Group Stage,June,6
+M_65,2026-06-26T00:00:00Z,20260626,23:00:00-07,Egypt,IR Iran,Egypt|IR Iran,S_11,Lumen Field,Seattle,POINT(-122.3316 47.5952),Group Stage,Egypt vs IR Iran - Group Stage,June,6
+M_66,2026-06-26T00:00:00Z,20260626,23:00:00-07,New Zealand,Belgium,New Zealand|Belgium,S_13,BC Place,Vancouver,POINT(-123.112 49.2768),Group Stage,New Zealand vs Belgium - Group Stage,June,6
+M_67,2026-06-27T00:00:00Z,20260627,17:00:00-04,Panama,England,Panama|England,S_8,MetLife Stadium,New York/New Jersey,POINT(-74.0742 40.8128),Group Stage,Panama vs England - Group Stage,June,6
+M_68,2026-06-27T00:00:00Z,20260627,17:00:00-04,Croatia,Ghana,Croatia|Ghana,S_9,Lincoln Financial Field,Philadelphia,POINT(-75.1675 39.9012),Group Stage,Croatia vs Ghana - Group Stage,June,6
+M_69,2026-06-27T00:00:00Z,20260627,19:30:00-04,Colombia,Portugal,Colombia|Portugal,S_7,Hard Rock Stadium,Miami,POINT(-80.2389 25.958),Group Stage,Colombia vs Portugal - Group Stage,June,6
+M_70,2026-06-27T00:00:00Z,20260627,19:30:00-04,Winner FIFA Playoff 1,Uzbekistan,Winner FIFA Playoff 1|Uzbekistan,S_1,Mercedes-Benz Stadium,Atlanta,POINT(-84.4008 33.7554),Group Stage,Winner FIFA Playoff 1 vs Uzbekistan - Group Stage,June,6
+M_71,2026-06-27T00:00:00Z,20260627,22:00:00-05,Algeria,Austria,Algeria|Austria,S_5,Arrowhead Stadium,Kansas City,POINT(-94.4839 39.0489),Group Stage,Algeria vs Austria - Group Stage,June,6
+M_72,2026-06-27T00:00:00Z,20260627,22:00:00-05,Jordan,Argentina,Jordan|Argentina,S_3,AT&T Stadium,Dallas,POINT(-97.0945 32.7473),Group Stage,Jordan vs Argentina - Group Stage,June,6
+M_73,2026-06-28T00:00:00Z,20260628,15:00:00-07,2A,2B,2A|2B,S_6,SoFi Stadium,Los Angeles,POINT(-118.3387 33.9534),Round of 32,2A vs 2B - Round of 32,June,6
+M_74,2026-06-29T00:00:00Z,20260629,13:00:00-05,1C,2F,1C|2F,S_4,NRG Stadium,Houston,POINT(-95.4107 29.6847),Round of 32,1C vs 2F - Round of 32,June,6
+M_75,2026-06-29T00:00:00Z,20260629,16:30:00-04,1E,3ABCDF,1E|3ABCDF,S_2,Gillette Stadium,Boston,POINT(-71.2643 42.0909),Round of 32,1E vs 3ABCDF - Round of 32,June,6
+M_76,2026-06-29T00:00:00Z,20260629,21:00:00-06,1F,2C,1F|2C,S_16,Estadio BBVA,Monterrey,POINT(-100.2444 25.67),Round of 32,1F vs 2C - Round of 32,June,6
+M_77,2026-06-30T00:00:00Z,20260630,13:00:00-05,2E,2I,2E|2I,S_3,AT&T Stadium,Dallas,POINT(-97.0945 32.7473),Round of 32,2E vs 2I - Round of 32,June,6
+M_78,2026-06-30T00:00:00Z,20260630,17:00:00-04,1I,3CDFGH,1I|3CDFGH,S_8,MetLife Stadium,New York/New Jersey,POINT(-74.0742 40.8128),Round of 32,1I vs 3CDFGH - Round of 32,June,6
+M_79,2026-06-30T00:00:00Z,20260630,21:00:00-06,1A,3CEFHI,1A|3CEFHI,S_15,Estadio Azteca,Mexico City,POINT(-99.1505 19.3029),Round of 32,1A vs 3CEFHI - Round of 32,June,6
+M_80,2026-07-01T00:00:00Z,20260701,12:00:00-04,1L,3EHIJK,1L|3EHIJK,S_1,Mercedes-Benz Stadium,Atlanta,POINT(-84.4008 33.7554),Round of 32,1L vs 3EHIJK - Round of 32,July,7
+M_81,2026-07-01T00:00:00Z,20260701,16:00:00-07,1G,3AEHIJ,1G|3AEHIJ,S_11,Lumen Field,Seattle,POINT(-122.3316 47.5952),Round of 32,1G vs 3AEHIJ - Round of 32,July,7
+M_82,2026-07-01T00:00:00Z,20260701,20:00:00-07,1D,3BEFIJ,1D|3BEFIJ,S_10,Levi's Stadium,San Francisco Bay Area,POINT(-121.9698 37.4032),Round of 32,1D vs 3BEFIJ - Round of 32,July,7
+M_83,2026-07-02T00:00:00Z,20260702,15:00:00-07,1H,2J,1H|2J,S_6,SoFi Stadium,Los Angeles,POINT(-118.3387 33.9534),Round of 32,1H vs 2J - Round of 32,July,7
+M_84,2026-07-02T00:00:00Z,20260702,19:00:00-04,2K,2L,2K|2L,S_12,BMO Field,Toronto,POINT(-79.4186 43.6332),Round of 32,2K vs 2L - Round of 32,July,7
+M_85,2026-07-02T00:00:00Z,20260702,23:00:00-07,1B,3EFGIJ,1B|3EFGIJ,S_13,BC Place,Vancouver,POINT(-123.112 49.2768),Round of 32,1B vs 3EFGIJ - Round of 32,July,7
+M_86,2026-07-03T00:00:00Z,20260703,14:00:00-05,2D,2G,2D|2G,S_3,AT&T Stadium,Dallas,POINT(-97.0945 32.7473),Round of 32,2D vs 2G - Round of 32,July,7
+M_87,2026-07-03T00:00:00Z,20260703,18:00:00-04,1J,2H,1J|2H,S_7,Hard Rock Stadium,Miami,POINT(-80.2389 25.958),Round of 32,1J vs 2H - Round of 32,July,7
+M_88,2026-07-03T00:00:00Z,20260703,21:30:00-05,1K,3DEIJL,1K|3DEIJL,S_5,Arrowhead Stadium,Kansas City,POINT(-94.4839 39.0489),Round of 32,1K vs 3DEIJL - Round of 32,July,7
+M_89,2026-07-04T00:00:00Z,20260704,13:00:00-05,W73,W75,W73|W75,S_4,NRG Stadium,Houston,POINT(-95.4107 29.6847),Round of 16,W73 vs W75 - Round of 16,July,7
+M_90,2026-07-04T00:00:00Z,20260704,17:00:00-04,W74,W77,W74|W77,S_9,Lincoln Financial Field,Philadelphia,POINT(-75.1675 39.9012),Round of 16,W74 vs W77 - Round of 16,July,7
+M_91,2026-07-05T00:00:00Z,20260705,16:00:00-04,W76,W78,W76|W78,S_8,MetLife Stadium,New York/New Jersey,POINT(-74.0742 40.8128),Round of 16,W76 vs W78 - Round of 16,July,7
+M_92,2026-07-05T00:00:00Z,20260705,20:00:00-06,W79,W80,W79|W80,S_15,Estadio Azteca,Mexico City,POINT(-99.1505 19.3029),Round of 16,W79 vs W80 - Round of 16,July,7
+M_93,2026-07-06T00:00:00Z,20260706,15:00:00-05,W83,W84,W83|W84,S_3,AT&T Stadium,Dallas,POINT(-97.0945 32.7473),Round of 16,W83 vs W84 - Round of 16,July,7
+M_94,2026-07-06T00:00:00Z,20260706,20:00:00-07,W81,W82,W81|W82,S_11,Lumen Field,Seattle,POINT(-122.3316 47.5952),Round of 16,W81 vs W82 - Round of 16,July,7
+M_95,2026-07-07T00:00:00Z,20260707,12:00:00-04,W86,W88,W86|W88,S_1,Mercedes-Benz Stadium,Atlanta,POINT(-84.4008 33.7554),Round of 16,W86 vs W88 - Round of 16,July,7
+M_96,2026-07-07T00:00:00Z,20260707,16:00:00-07,W85,W87,W85|W87,S_13,BC Place,Vancouver,POINT(-123.112 49.2768),Round of 16,W85 vs W87 - Round of 16,July,7
+M_97,2026-07-09T00:00:00Z,20260709,16:00:00-04,W89,W90,W89|W90,S_2,Gillette Stadium,Boston,POINT(-71.2643 42.0909),Quarterfinals,W89 vs W90 - Quarterfinals,July,7
+M_98,2026-07-10T00:00:00Z,20260710,15:00:00-07,W93,W94,W93|W94,S_6,SoFi Stadium,Los Angeles,POINT(-118.3387 33.9534),Quarterfinals,W93 vs W94 - Quarterfinals,July,7
+M_99,2026-07-11T00:00:00Z,20260711,17:00:00-04,W91,W92,W91|W92,S_7,Hard Rock Stadium,Miami,POINT(-80.2389 25.958),Quarterfinals,W91 vs W92 - Quarterfinals,July,7
+M_100,2026-07-11T00:00:00Z,20260711,21:00:00-05,W95,W100,W95|W100,S_5,Arrowhead Stadium,Kansas City,POINT(-94.4839 39.0489),Quarterfinals,W95 vs W100 - Quarterfinals,July,7
+M_101,2026-07-14T00:00:00Z,20260714,15:00:00-05,W97,W98,W97|W98,S_3,AT&T Stadium,Dallas,POINT(-97.0945 32.7473),Semifinals,W97 vs W98 - Semifinals,July,7
+M_102,2026-07-15T00:00:00Z,20260715,15:00:00-04,W99,W100,W99|W100,S_1,Mercedes-Benz Stadium,Atlanta,POINT(-84.4008 33.7554),Semifinals,W99 vs W100 - Semifinals,July,7
+M_103,2026-07-18T00:00:00Z,20260718,17:00:00-04,RU101,RU102,RU101|RU102,S_7,Hard Rock Stadium,Miami,POINT(-80.2389 25.958),Third Place Playoff,RU101 vs RU102 - Third Place Playoff,July,7
+M_104,2026-07-19T00:00:00Z,20260719,15:00:00-04,W101,W102,W101|W102,S_8,MetLife Stadium,New York/New Jersey,POINT(-74.0742 40.8128),Final,W101 vs W102 - Final,July,7

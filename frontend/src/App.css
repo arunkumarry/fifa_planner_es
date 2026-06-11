@@ -16,6 +16,13 @@
   overflow: hidden; /* Keep content within the viewport height */
 }
 
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
 .chat-header {
   padding: 20px;
   border-bottom: 1px solid var(--border-color);
@@ -485,6 +492,10 @@
   background: #040508;
   border-top: 1px solid var(--border-color);
   height: 220px;
+  min-height: 100px;
+  max-height: 70vh;
+  resize: vertical;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   font-family: monospace;
@@ -526,6 +537,7 @@
 
 .console-log-row {
   line-break: anywhere;
+  font-size: 0.75rem;
 }
 
 .console-log-time {
@@ -603,6 +615,27 @@
   text-transform: uppercase;
   color: var(--color-text-muted);
   font-weight: 600;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotating-football {
+  animation: spin 12s linear infinite;
+  color: var(--color-primary);
+  filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+}
+
+.header-football-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 

@@ -1,0 +1,49 @@
+hotel_id,name,stadium_id,city,price_per_night,price_tier,rating,rating_tier,location,hotel_display,value_score
+H_1,"Atlanta City Center Suites",S_1,"Atlanta",270,luxury,4.3,good,"POINT(-84.398179 33.76273)","Atlanta City Center Suites (4.3★) - $270/night",1.6
+H_2,"Atlanta Boutique Airbnb",S_1,"Atlanta",106,mid,3.7,good,"POINT(-84.415335 33.740794)","Atlanta Boutique Airbnb (3.7★) - $106/night",3.5
+H_3,"Atlanta Grand Plaza",S_1,"Atlanta",235,luxury,4,good,"POINT(-84.386219 33.740323)","Atlanta Grand Plaza (4★) - $235/night",1.7
+H_4,"Boston Garden Inn",S_2,"Boston",85,budget,3.7,good,"POINT(-71.256833 42.098209)","Boston Garden Inn (3.7★) - $85/night",4.4
+H_5,"Boston City Center Suites",S_2,"Boston",266,luxury,4,good,"POINT(-71.254413 42.083063)","Boston City Center Suites (4★) - $266/night",1.5
+H_6,"Boston Boutique Airbnb",S_2,"Boston",156,luxury,4.5,excellent,"POINT(-71.274949 42.101268)","Boston Boutique Airbnb (4.5★) - $156/night",2.9
+H_7,"Dallas Airport Express",S_3,"Dallas",92,budget,3.9,good,"POINT(-97.102766 32.766823)","Dallas Airport Express (3.9★) - $92/night",4.2
+H_8,"Dallas Garden Inn",S_3,"Dallas",315,luxury,3.8,good,"POINT(-97.099383 32.743034)","Dallas Garden Inn (3.8★) - $315/night",1.2
+H_9,"Dallas City Center Suites",S_3,"Dallas",296,luxury,4.5,excellent,"POINT(-97.110892 32.743379)","Dallas City Center Suites (4.5★) - $296/night",1.5
+H_10,"Houston Grand Plaza",S_4,"Houston",300,luxury,3.9,good,"POINT(-95.398621 29.668156)","Houston Grand Plaza (3.9★) - $300/night",1.3
+H_11,"Houston Airport Express",S_4,"Houston",140,mid,4.7,excellent,"POINT(-95.405362 29.704165)","Houston Airport Express (4.7★) - $140/night",3.4
+H_12,"Houston Garden Inn",S_4,"Houston",234,luxury,4.9,excellent,"POINT(-95.393012 29.675158)","Houston Garden Inn (4.9★) - $234/night",2.1
+H_13,"Kansas City Boutique Airbnb",S_5,"Kansas City",185,luxury,4.1,good,"POINT(-94.487438 39.058442)","Kansas City Boutique Airbnb (4.1★) - $185/night",2.2
+H_14,"Kansas City Grand Plaza",S_5,"Kansas City",94,budget,4.7,excellent,"POINT(-94.477724 39.059003)","Kansas City Grand Plaza (4.7★) - $94/night",5.0
+H_15,"Kansas City Airport Express",S_5,"Kansas City",137,mid,3.9,good,"POINT(-94.478571 39.045918)","Kansas City Airport Express (3.9★) - $137/night",2.8
+H_16,"Los Angeles City Center Suites",S_6,"Los Angeles",289,luxury,4,good,"POINT(-118.331646 33.967528)","Los Angeles City Center Suites (4★) - $289/night",1.4
+H_17,"Los Angeles Boutique Airbnb",S_6,"Los Angeles",179,luxury,4.7,excellent,"POINT(-118.345213 33.961606)","Los Angeles Boutique Airbnb (4.7★) - $179/night",2.6
+H_18,"Los Angeles Grand Plaza",S_6,"Los Angeles",323,luxury,3.6,good,"POINT(-118.352592 33.957929)","Los Angeles Grand Plaza (3.6★) - $323/night",1.1
+H_19,"Miami Garden Inn",S_7,"Miami",259,luxury,3.6,good,"POINT(-80.234755 25.969455)","Miami Garden Inn (3.6★) - $259/night",1.4
+H_20,"Miami City Center Suites",S_7,"Miami",217,luxury,3.9,good,"POINT(-80.234973 25.9395)","Miami City Center Suites (3.9★) - $217/night",1.8
+H_21,"Miami Boutique Airbnb",S_7,"Miami",199,luxury,4.8,excellent,"POINT(-80.23708 25.93931)","Miami Boutique Airbnb (4.8★) - $199/night",2.4
+H_22,"New York/New Jersey Airport Express",S_8,"New York/New Jersey",253,luxury,4.6,excellent,"POINT(-74.058892 40.812956)","New York/New Jersey Airport Express (4.6★) - $253/night",1.8
+H_23,"New York/New Jersey Garden Inn",S_8,"New York/New Jersey",102,mid,4.1,good,"POINT(-74.086811 40.795489)","New York/New Jersey Garden Inn (4.1★) - $102/night",4.0
+H_24,"New York/New Jersey City Center Suites",S_8,"New York/New Jersey",87,budget,3.8,good,"POINT(-74.065025 40.805323)","New York/New Jersey City Center Suites (3.8★) - $87/night",4.4
+H_25,"Philadelphia Grand Plaza",S_9,"Philadelphia",212,luxury,4.2,good,"POINT(-75.155794 39.883124)","Philadelphia Grand Plaza (4.2★) - $212/night",2.0
+H_26,"Philadelphia Airport Express",S_9,"Philadelphia",279,luxury,4.6,excellent,"POINT(-75.181616 39.916491)","Philadelphia Airport Express (4.6★) - $279/night",1.6
+H_27,"Philadelphia Garden Inn",S_9,"Philadelphia",211,luxury,4.3,good,"POINT(-75.187089 39.911895)","Philadelphia Garden Inn (4.3★) - $211/night",2.0
+H_28,"San Francisco Bay Area Boutique Airbnb",S_10,"San Francisco Bay Area",293,luxury,4.9,excellent,"POINT(-121.979338 37.39709)","San Francisco Bay Area Boutique Airbnb (4.9★) - $293/night",1.7
+H_29,"San Francisco Bay Area Grand Plaza",S_10,"San Francisco Bay Area",148,mid,4.2,good,"POINT(-121.984676 37.406)","San Francisco Bay Area Grand Plaza (4.2★) - $148/night",2.8
+H_30,"San Francisco Bay Area Airport Express",S_10,"San Francisco Bay Area",317,luxury,4.8,excellent,"POINT(-121.972725 37.420996)","San Francisco Bay Area Airport Express (4.8★) - $317/night",1.5
+H_31,"Seattle City Center Suites",S_11,"Seattle",168,luxury,3.5,good,"POINT(-122.320711 47.614368)","Seattle City Center Suites (3.5★) - $168/night",2.1
+H_32,"Seattle Boutique Airbnb",S_11,"Seattle",191,luxury,4.4,good,"POINT(-122.325618 47.57757)","Seattle Boutique Airbnb (4.4★) - $191/night",2.3
+H_33,"Seattle Grand Plaza",S_11,"Seattle",88,budget,3.6,good,"POINT(-122.31666 47.605805)","Seattle Grand Plaza (3.6★) - $88/night",4.1
+H_34,"Toronto Garden Inn",S_12,"Toronto",123,mid,4.5,excellent,"POINT(-79.419422 43.613485)","Toronto Garden Inn (4.5★) - $123/night",3.7
+H_35,"Toronto City Center Suites",S_12,"Toronto",98,budget,4,good,"POINT(-79.406805 43.65172)","Toronto City Center Suites (4★) - $98/night",4.1
+H_36,"Toronto Boutique Airbnb",S_12,"Toronto",310,luxury,4.7,excellent,"POINT(-79.436305 43.619933)","Toronto Boutique Airbnb (4.7★) - $310/night",1.5
+H_37,"Vancouver Airport Express",S_13,"Vancouver",186,luxury,4.2,good,"POINT(-123.120486 49.267162)","Vancouver Airport Express (4.2★) - $186/night",2.3
+H_38,"Vancouver Garden Inn",S_13,"Vancouver",291,luxury,4.1,good,"POINT(-123.104459 49.269308)","Vancouver Garden Inn (4.1★) - $291/night",1.4
+H_39,"Vancouver City Center Suites",S_13,"Vancouver",99,budget,4.7,excellent,"POINT(-123.128995 49.264603)","Vancouver City Center Suites (4.7★) - $99/night",4.7
+H_40,"Guadalajara Grand Plaza",S_14,"Guadalajara",187,luxury,3.8,good,"POINT(-103.445513 20.675139)","Guadalajara Grand Plaza (3.8★) - $187/night",2.0
+H_41,"Guadalajara Airport Express",S_14,"Guadalajara",174,luxury,3.7,good,"POINT(-103.472477 20.672099)","Guadalajara Airport Express (3.7★) - $174/night",2.1
+H_42,"Guadalajara Garden Inn",S_14,"Guadalajara",225,luxury,4.1,good,"POINT(-103.450103 20.672587)","Guadalajara Garden Inn (4.1★) - $225/night",1.8
+H_43,"Mexico City Boutique Airbnb",S_15,"Mexico City",107,mid,4.2,good,"POINT(-99.133957 19.283179)","Mexico City Boutique Airbnb (4.2★) - $107/night",3.9
+H_44,"Mexico City Grand Plaza",S_15,"Mexico City",188,luxury,3.8,good,"POINT(-99.15133 19.290789)","Mexico City Grand Plaza (3.8★) - $188/night",2.0
+H_45,"Mexico City Airport Express",S_15,"Mexico City",222,luxury,4.1,good,"POINT(-99.151612 19.305385)","Mexico City Airport Express (4.1★) - $222/night",1.8
+H_46,"Monterrey City Center Suites",S_16,"Monterrey",320,luxury,3.9,good,"POINT(-100.261759 25.675314)","Monterrey City Center Suites (3.9★) - $320/night",1.2
+H_47,"Monterrey Boutique Airbnb",S_16,"Monterrey",215,luxury,4.1,good,"POINT(-100.24739 25.678238)","Monterrey Boutique Airbnb (4.1★) - $215/night",1.9
+H_48,"Monterrey Grand Plaza",S_16,"Monterrey",117,mid,4.4,good,"POINT(-100.24688 25.685831)","Monterrey Grand Plaza (4.4★) - $117/night",3.8

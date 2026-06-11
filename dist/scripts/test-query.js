@@ -129,7 +129,7 @@ function normalizeCity(city) {
 async function runTest() {
     console.log("--- TEST 1: Retrieve all matches (match_all) ---");
     const resAll = await client.search({
-        index: 'fifa_matches',
+        index: 'fifa_matches_complete',
         body: {
             query: { match_all: {} },
             size: 5
@@ -141,7 +141,7 @@ async function runTest() {
     const normalizedCityVal = normalizeCity("Miami");
     console.log(`Normalized City: ${normalizedCityVal}`);
     const resMiamiMatch = await client.search({
-        index: 'fifa_matches',
+        index: 'fifa_matches_complete',
         body: {
             query: {
                 bool: {
@@ -158,7 +158,7 @@ async function runTest() {
     }
     console.log("\n--- TEST 3: Query by city = 'Miami' using term query ---");
     const resMiamiTerm = await client.search({
-        index: 'fifa_matches',
+        index: 'fifa_matches_complete',
         body: {
             query: {
                 bool: {
@@ -173,7 +173,7 @@ async function runTest() {
     console.log("\n--- TEST 4: Query by team 'USA' using terms query ---");
     const normalizedTeamVal = normalizeTeam("USA") || "USA";
     const resTeamTerms = await client.search({
-        index: 'fifa_matches',
+        index: 'fifa_matches_complete',
         body: {
             query: {
                 bool: {
