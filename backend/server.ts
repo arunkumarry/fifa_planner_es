@@ -112,20 +112,54 @@ async function initializeMcpClient() {
   
   console.log(`📡 Connecting to Kibana MCP Endpoint: ${kbMcpUrl}`);
 
+  const proxyScriptPath = path.join(__dirname, '../node_modules/mcp-remote/dist/proxy.js');
+
   const transport = new StdioClientTransport({
-    command: 'npx',
+    command: 'node',
     args: [
-      '--no-install',
-      'mcp-remote',
+      proxyScriptPath,
       kbMcpUrl,
       '--header',
       `Authorization:ApiKey ${esApiKey}`
     ],
     env: {
-      PATH: process.env.PATH || ''
+      ...process.env,
+      HOME: '/tmp',
+      MCP_REMOTE_CONFIG_DIR: '/tmp'
     },
     stderr: 'pipe'
   } as any);
+
+  // Hook into transport.start to capture stderr, error, and exit immediately when child process is spawned
+  const originalStart = transport.start.bind(transport);
+  transport.start = function() {
+    const p = originalStart();
+    const childProcess = (transport as any)._process;
+    if (childProcess) {
+      console.log(`[backend] StdioClientTransport: Child process spawned (PID: ${childProcess.pid})`);
+
+      childProcess.on("error", (err) => {
+        console.error(`[backend] Child process spawn/execution error:`, err);
+      });
+
+      childProcess.on("exit", (code, signal) => {
+        console.log(`[backend] Child process exited with code: ${code}, signal: ${signal}`);
+      });
+
+      if (childProcess.stderr) {
+        childProcess.stderr.on('data', (chunk: Buffer) => {
+          const data = chunk.toString();
+          const lines = data.split('\n');
+          for (const line of lines) {
+            if (!line.trim()) continue;
+            const masked = line.replace(/ApiKey\s+[A-Za-z0-9+/=]+/g, 'ApiKey [REDACTED]');
+            console.log(`[mcp-remote] ${masked}`);
+          }
+        });
+      }
+    }
+    return p;
+  };
 
   mcpClient = new Client(
     { name: 'fifa-backend-client', version: '1.0.0' },
@@ -133,20 +167,6 @@ async function initializeMcpClient() {
   );
 
   await mcpClient.connect(transport);
-
-  // Redact custom header authorization API keys from mcp-remote output logs
-  const childProcess = (transport as any)._process;
-  if (childProcess && childProcess.stderr) {
-    childProcess.stderr.on('data', (chunk: Buffer) => {
-      const data = chunk.toString();
-      const lines = data.split('\n');
-      for (const line of lines) {
-        if (!line.trim()) continue;
-        const masked = line.replace(/ApiKey\s+[A-Za-z0-9+/=]+/g, 'ApiKey [REDACTED]');
-        console.log(`[mcp-remote] ${masked}`);
-      }
-    });
-  }
 
   console.log('✅ Connected to Elastic Agent Builder MCP Server.');
 
@@ -433,6 +453,70 @@ Instructions:
   }
 });
 
+app.get('/api/diagnostic', async (req, res) => {
+  const diagnosticResults: any = {
+    timestamp: new Date().toISOString(),
+    elasticsearch: { status: 'unknown' },
+    kibanaMcp: { status: 'unknown' },
+    env: {
+      PORT: process.env.PORT,
+      ELASTICSEARCH_URL: process.env.ELASTICSEARCH_URL ? 'set (starts with ' + process.env.ELASTICSEARCH_URL.substring(0, 15) + '...)' : 'missing',
+      ELASTICSEARCH_API_KEY: process.env.ELASTICSEARCH_API_KEY ? 'set' : 'missing',
+      GEMINI_API_KEY: process.env.GEMINI_API_KEY ? 'set' : 'missing'
+    }
+  };
+
+  // 1. Test local Elasticsearch client connectivity
+  try {
+    const pingRes = await esClient.ping();
+    diagnosticResults.elasticsearch = {
+      status: 'connected',
+      pingResponse: pingRes
+    };
+  } catch (err: any) {
+    diagnosticResults.elasticsearch = {
+      status: 'failed',
+      error: err.message
+    };
+  }
+
+  // 2. Test Kibana MCP URL reachability via direct HTTP GET/POST
+  const esUrl = process.env.ELASTICSEARCH_URL || '';
+  const kbUrl = esUrl.replace('.es.', '.kb.').replace(':443', '');
+  const kbMcpUrl = `${kbUrl}/api/agent_builder/mcp`;
+
+  try {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+    const fetchRes = await fetch(kbMcpUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `ApiKey ${process.env.ELASTICSEARCH_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({}),
+      signal: controller.signal
+    });
+    clearTimeout(id);
+
+    diagnosticResults.kibanaMcp = {
+      status: 'reachable',
+      url: kbMcpUrl,
+      httpStatus: fetchRes.status,
+      httpStatusText: fetchRes.statusText
+    };
+  } catch (err: any) {
+    diagnosticResults.kibanaMcp = {
+      status: 'unreachable',
+      url: kbMcpUrl,
+      error: err.message
+    };
+  }
+
+  res.json(diagnosticResults);
+});
+
 // Serve static files from frontend/dist
 const distPath = path.join(__dirname, '../frontend/dist');
 app.use(express.static(distPath));
@@ -442,11 +526,16 @@ app.get('*all', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
-app.listen(PORT, async () => {
-  console.log(`🚀 Backend server listening on port ${PORT}`);
+async function startServer() {
   try {
     await initializeMcpClient();
   } catch (e) {
     console.error('Failed to initialize MCP client', e);
   }
-});
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Backend server listening on port ${PORT}`);
+  });
+}
+
+startServer();
