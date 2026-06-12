@@ -1,5 +1,5 @@
 import React from 'react';
-import { Send, Bot, User } from 'lucide-react';
+import { Send, Bot, User, X } from 'lucide-react';
 import type { Message } from '../types';
 
 interface Props {
@@ -8,14 +8,22 @@ interface Props {
   setChatInput: (val: string) => void;
   handleSendMessage: (e: React.FormEvent) => void;
   chatMessagesRef: React.RefObject<HTMLDivElement | null>;
+  onClose?: () => void;
 }
 
-export const ChatPanel: React.FC<Props> = ({ chatMessages, chatInput, setChatInput, handleSendMessage, chatMessagesRef }) => {
+export const ChatPanel: React.FC<Props> = ({ chatMessages, chatInput, setChatInput, handleSendMessage, chatMessagesRef, onClose }) => {
   return (
     <div className="chat-panel">
-      <div className="chat-header">
-        <h2>Agent Chat</h2>
-        <p>Ask anything about the match day!</p>
+      <div className="chat-header" style={{ justifyContent: 'space-between' }}>
+        <div>
+          <h2>Agent Chat</h2>
+          <p>Ask anything about the match day!</p>
+        </div>
+        {onClose && (
+          <button onClick={onClose} className="chat-close-btn" style={{ background: 'transparent', border: 'none', color: 'var(--color-text-muted)', cursor: 'pointer' }}>
+            <X size={24} />
+          </button>
+        )}
       </div>
 
       <div ref={chatMessagesRef} className="chat-messages">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Calendar, Compass } from 'lucide-react';
+import { MapPin, Calendar, Compass, MessageSquare } from 'lucide-react';
 import './App.css';
 
 import type { Match, Stadium, Accommodation, Hospital, Weather, Message, ConsoleLog } from './types';
@@ -28,6 +28,7 @@ export default function App() {
   ]);
   const [consoleLogs, setConsoleLogs] = useState<ConsoleLog[]>([]);
   const [showConsole, setShowConsole] = useState<boolean>(true);
+  const [isChatExpanded, setIsChatExpanded] = useState<boolean>(false);
   
   const chatMessagesRef = useRef<HTMLDivElement>(null);
   const consoleLogsRef = useRef<HTMLDivElement>(null);
@@ -175,13 +176,14 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <aside className="chat-sidebar">
+      <aside className={`chat-sidebar ${isChatExpanded ? 'expanded' : ''}`}>
         <ChatPanel 
           chatMessages={chatMessages}
           chatInput={chatInput}
           setChatInput={setChatInput}
           handleSendMessage={handleSendMessage}
           chatMessagesRef={chatMessagesRef}
+          onClose={() => setIsChatExpanded(false)}
         />
         <ConsolePanel 
           consoleLogs={consoleLogs}
@@ -250,6 +252,14 @@ export default function App() {
           <HospitalsWidget activeHospitals={activeHospitals} />
         </div>
       </main>
+
+      <button 
+        className="mobile-chat-toggle glow-btn"
+        onClick={() => setIsChatExpanded(true)}
+      >
+        <MessageSquare size={20} />
+        <span>Chat with Agent</span>
+      </button>
     </div>
   );
 }
