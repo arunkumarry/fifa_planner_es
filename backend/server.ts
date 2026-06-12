@@ -138,11 +138,11 @@ async function initializeMcpClient() {
     if (childProcess) {
       console.log(`[backend] StdioClientTransport: Child process spawned (PID: ${childProcess.pid})`);
 
-      childProcess.on("error", (err) => {
+      childProcess.on("error", (err: any) => {
         console.error(`[backend] Child process spawn/execution error:`, err);
       });
 
-      childProcess.on("exit", (code, signal) => {
+      childProcess.on("exit", (code: any, signal: any) => {
         console.log(`[backend] Child process exited with code: ${code}, signal: ${signal}`);
       });
 

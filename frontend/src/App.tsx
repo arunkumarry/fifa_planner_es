@@ -70,7 +70,7 @@ export default function App() {
   const activeHospitals = HOSPITALS
     .filter(h => h.stadium_id === activeMatch.stadium_id)
     .map(h => {
-      const distance = getDistanceKm(h.latitude, h.longitude, activeStadium.latitude, activeStadium.longitude);
+      const distance = h.distance_km !== undefined ? h.distance_km : getDistanceKm(h.latitude, h.longitude, activeStadium.latitude, activeStadium.longitude);
       return {
         ...h,
         distance_km: parseFloat(distance.toFixed(2))
