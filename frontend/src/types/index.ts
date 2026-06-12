@@ -25,7 +25,7 @@ export interface Accommodation {
   longitude: number;
   price_per_night: number;
   rating: number;
-  distance_km?: number;
+  distance_miles?: number;
   driving_eta?: number;
   walking_eta?: number;
 }
@@ -36,7 +36,7 @@ export interface Hospital {
   stadium_id: string;
   latitude: number;
   longitude: number;
-  distance_km?: number;
+  distance_miles?: number;
   beds: number;
   trauma: string;
   telephone: string;

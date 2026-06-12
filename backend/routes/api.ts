@@ -26,7 +26,11 @@ router.get('/matches', async (req, res) => {
     const data = await getFromCacheOrFetch('all_matches', async () => {
       const response = await esClient.search({
         index: 'fifa_matches',
-        body: { query: { match_all: {} }, size: 100 }
+        body: { 
+          query: { match_all: {} }, 
+          size: 100,
+          sort: [{ date: { order: 'asc' } }]
+        }
       });
       return response.hits.hits.map((hit: any) => hit._source);
     });

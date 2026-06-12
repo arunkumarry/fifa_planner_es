@@ -82,17 +82,18 @@ async function handleLocalElasticSearch(name: string, args: any) {
           _geo_distance: {
             location: { lat, lon },
             order: 'asc',
-            unit: 'km',
-            distance_type: 'plane'
+            unit: 'mi',
+            distance_type: 'arc'
           }
         }
-      ]
+      ],
+      size: 20
     }
   });
 
   const hits = (response.hits.hits as any[]).map((hit: any) => ({
     ...hit._source,
-    distance_km: parseFloat(hit.sort[0].toFixed(2))
+    distance_miles: parseFloat(hit.sort[0].toFixed(2))
   }));
 
   const key = name === 'find_nearby_accommodations' ? 'accommodations' : 'hospitals';
@@ -327,7 +328,8 @@ The user is currently looking at: ${JSON.stringify(context, null, 2)}
 Instructions:
 1. Provide friendly, natural language responses.
 2. DO NOT output, print, or repeat any raw JSON structures of tool results (such as function call responses, API logs, or tool returns) in your chat bubble. Use the tool results to answer the user's questions in a clean, conversational, markdown format.
-3. If the user asks for route navigation to a hotel or hospital, or when you are recommending them, provide a direct Google Maps direction link using this format: https://www.google.com/maps/dir/?api=1&origin=<STADIUM_LAT>,<STADIUM_LON>&destination=<DEST_LAT>,<DEST_LON>. Always use the active stadium's coordinates as the origin. Use standard markdown links (e.g. [Directions to Hotel](url)).`;
+3. If the user asks for route navigation to a hotel or hospital, or when you are recommending them, provide a direct Google Maps direction link using this format: https://www.google.com/maps/dir/?api=1&origin=<STADIUM_LAT>,<STADIUM_LON>&destination=<DEST_LAT>,<DEST_LON>. Always use the active stadium's coordinates as the origin. Use standard markdown links (e.g. [Directions to Hotel](url)).
+4. If the user asks about team winning chances, predictions, or matchup comparisons, ALWAYS filter or focus your answer on the two teams from the currently active match context, unless the user explicitly names other teams. DO NOT just list the global top contenders.`;
 
     const chat = ai.chats.create({
       model: 'gemini-2.5-flash',

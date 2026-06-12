@@ -58,6 +58,15 @@ export default function App() {
         
         setMatches(mData);
         setTeamStats(tData);
+
+        const todayStr = new Date().toLocaleDateString('en-CA');
+        const todaysMatch = mData.find((m: any) => m.date.startsWith(todayStr));
+        if (todaysMatch) {
+          setSelectedMatchId(todaysMatch.match_id);
+        } else if (mData.length > 0) {
+          setSelectedMatchId(mData[0].match_id);
+        }
+
         const stMap: Record<string, Stadium> = {};
         if (Array.isArray(sData)) {
           sData.forEach((s: any) => stMap[s.stadium_id] = s);
@@ -231,19 +240,8 @@ export default function App() {
             <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>FIFA World Cup 2026 Fan Service Agent Dashboard</p>
           </div>
           <div className="header-football-container">
-            <svg viewBox="0 0 100 100" width="48" height="48" className="rotating-football">
-              <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeWidth="4" />
-              <polygon points="50,38 60,45 56,57 44,57 40,45" fill="currentColor" />
-              <line x1="50" y1="38" x2="50" y2="15" stroke="currentColor" strokeWidth="3" />
-              <line x1="60" y1="45" x2="80" y2="35" stroke="currentColor" strokeWidth="3" />
-              <line x1="56" y1="57" x2="70" y2="80" stroke="currentColor" strokeWidth="3" />
-              <line x1="44" y1="57" x2="30" y2="80" stroke="currentColor" strokeWidth="3" />
-              <line x1="40" y1="45" x2="20" y2="35" stroke="currentColor" strokeWidth="3" />
-              <polygon points="50,15 42,8 58,8" fill="currentColor" />
-              <polygon points="80,35 90,28 85,42" fill="currentColor" />
-              <polygon points="70,80 80,85 68,92" fill="currentColor" />
-              <polygon points="30,80 20,85 32,92" fill="currentColor" />
-              <polygon points="20,35 10,28 15,42" fill="currentColor" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 2100 2100" className="rotating-football">
+              <path fill="var(--color-primary)" fillRule="nonzero" d="M 1867.710938 1050 C 1867.710938 1275.265625 1787.738281 1467.867188 1627.808594 1627.804688 C 1467.871094 1787.742188 1275.269531 1867.710938 1050 1867.710938 C 824.734375 1867.710938 632.132812 1787.742188 472.195312 1627.804688 C 312.257812 1467.867188 232.289062 1275.265625 232.289062 1050 C 232.289062 824.730469 312.257812 632.128906 472.195312 472.191406 C 632.132812 312.261719 824.734375 232.289062 1050 232.289062 C 1275.269531 232.289062 1467.871094 312.261719 1627.808594 472.191406 C 1787.738281 632.128906 1867.710938 824.730469 1867.710938 1050 Z M 1756.210938 690.140625 C 1702.140625 584.261719 1627.808594 494.71875 1533.191406 421.511719 L 1536.570312 470.5 Z M 1769.71875 729 L 1766.339844 725.621094 L 1768.03125 725.621094 L 1526.441406 482.328125 L 1298.359375 560.050781 L 1298.359375 845.570312 L 1538.261719 1046.621094 L 1761.28125 977.351562 Z M 1837.300781 1139.542969 L 1764.660156 994.25 L 1541.640625 1063.519531 L 1384.519531 1357.488281 L 1445.339844 1534.882812 L 1681.871094 1528.125 C 1769.71875 1412.113281 1821.53125 1282.585938 1837.300781 1139.542969 Z M 1281.460938 843.878906 L 1281.460938 558.359375 L 1014.519531 423.199219 L 771.234375 614.109375 L 783.0625 872.601562 L 1016.210938 990.871094 Z M 1004.378906 409.679688 L 955.390625 262.699219 C 772.925781 285.21875 616.929688 361.808594 487.398438 492.46875 L 502.605469 583.699219 L 759.40625 602.28125 Z M 487.398438 590.460938 L 472.195312 507.671875 C 353.929688 633.820312 284.660156 782.5 264.386719 953.699219 L 360.6875 886.121094 Z M 1431.828125 1539.953125 L 1369.308594 1362.554688 L 1071.960938 1279.769531 L 855.710938 1453.789062 L 946.941406 1698.765625 L 1225.710938 1719.039062 Z M 1061.828125 1266.253906 L 1011.140625 1004.378906 L 776.304688 887.808594 L 543.152344 1093.929688 L 593.839844 1333.835938 L 843.882812 1441.960938 Z M 1286.53125 1805.203125 L 1225.710938 1735.933594 L 943.5625 1713.96875 L 855.710938 1817.027344 C 918.785156 1833.921875 983.546875 1842.371094 1050 1842.371094 C 1131.101562 1842.371094 1209.941406 1829.980469 1286.53125 1805.203125 Z M 578.632812 1338.902344 L 526.257812 1095.621094 L 365.757812 903.011719 L 261.007812 975.660156 C 258.753906 999.308594 257.628906 1024.089844 257.628906 1050 C 257.628906 1181.78125 288.039062 1305.113281 348.863281 1419.996094 L 456.988281 1489.265625 Z M 473.882812 1594.015625 L 451.921875 1504.472656 L 365.757812 1450.410156 C 396.167969 1501.09375 432.210938 1548.964844 473.882812 1594.015625 "/>
             </svg>
           </div>
           <div>
@@ -253,11 +251,15 @@ export default function App() {
               onChange={handleMatchChange}
               className="match-select"
             >
-              {matches.map((m) => (
-                <option key={m.match_id} value={m.match_id}>
-                  {m.team_1} vs {m.team_2} ({m.city})
-                </option>
-              ))}
+              {matches.map((m) => {
+                const dateObj = new Date(m.date);
+                const formattedDate = dateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', weekday: 'short' });
+                return (
+                  <option key={m.match_id} value={m.match_id}>
+                    {m.team_1} vs {m.team_2} ({m.city}) - {formattedDate}
+                  </option>
+                );
+              })}
             </select>
           </div>
         </div>

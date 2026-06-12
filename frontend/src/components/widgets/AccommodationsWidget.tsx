@@ -29,7 +29,7 @@ export const AccommodationsWidget: React.FC<Props> = ({ activeAccommodations, ac
                 <span>•</span>
                 <span className="hotel-price">${hotel.price_per_night} / night</span>
                 <span>•</span>
-                <span style={{ color: 'var(--color-primary)' }}>{hotel.distance_km} km away</span>
+                <span style={{ color: 'var(--color-primary)' }}>{hotel.distance_miles} miles away</span>
               </div>
             </div>
             <div className="hotel-travel-eta" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

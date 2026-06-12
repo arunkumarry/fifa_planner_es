@@ -23,7 +23,7 @@ export const HospitalsWidget: React.FC<Props> = ({ activeHospitals, activeStadiu
             <div className="hotel-info">
               <h4>{hospital.name}</h4>
               <div className="hotel-rating-price">
-                <span style={{ color: '#ef4444' }}>{hospital.distance_km} km away</span>
+                <span style={{ color: '#ef4444' }}>{hospital.distance_miles} miles away</span>
                 <span>•</span>
                 <span>{hospital.beds} Beds</span>
                 <span>•</span>
