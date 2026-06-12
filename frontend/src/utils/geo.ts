@@ -9,3 +9,8 @@ export function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: nu
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
+
+export function openGoogleMapsRoute(destLat: number, destLon: number, originLat: number, originLon: number) {
+  const url = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLon}&destination=${destLat},${destLon}`;
+  window.open(url, '_blank');
+}

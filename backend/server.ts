@@ -320,7 +320,8 @@ The user is currently looking at: ${JSON.stringify(context, null, 2)}
 
 Instructions:
 1. Provide friendly, natural language responses.
-2. DO NOT output, print, or repeat any raw JSON structures of tool results (such as function call responses, API logs, or tool returns) in your chat bubble. Use the tool results to answer the user's questions in a clean, conversational, markdown format.`;
+2. DO NOT output, print, or repeat any raw JSON structures of tool results (such as function call responses, API logs, or tool returns) in your chat bubble. Use the tool results to answer the user's questions in a clean, conversational, markdown format.
+3. If the user asks for route navigation to a hotel or hospital, or when you are recommending them, provide a direct Google Maps direction link using this format: https://www.google.com/maps/dir/?api=1&origin=<STADIUM_LAT>,<STADIUM_LON>&destination=<DEST_LAT>,<DEST_LON>. Always use the active stadium's coordinates as the origin. Use standard markdown links (e.g. [Directions to Hotel](url)).`;
 
     const chat = ai.chats.create({
       model: 'gemini-2.5-flash',

@@ -249,7 +249,7 @@ export default function App() {
           <StadiumWidget activeStadium={activeStadium} />
           <WeatherWidget activeWeather={activeWeather} />
           <AccommodationsWidget activeAccommodations={activeAccommodations} activeStadium={activeStadium} />
-          <HospitalsWidget activeHospitals={activeHospitals} />
+          <HospitalsWidget activeHospitals={activeHospitals} activeStadium={activeStadium} />
         </div>
       </main>
 
