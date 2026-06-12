@@ -9,6 +9,8 @@ import * as path from 'path';
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
+import apiRouter from './routes/api';
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -21,7 +23,7 @@ const ai = new GoogleGenAI({
   vertexai: false,
 } as any);
 
-const esClient = new EsClient({
+export const esClient = new EsClient({
   node: process.env.ELASTICSEARCH_URL || '',
   auth: {
     apiKey: process.env.ELASTICSEARCH_API_KEY || ''
@@ -100,6 +102,9 @@ async function handleLocalElasticSearch(name: string, args: any) {
 let mcpClient: Client | null = null;
 let vertexTools: any[] = [];
 
+export const getMcpClient = () => mcpClient;
+export const getHandleLocalElasticSearch = () => handleLocalElasticSearch;
+
 async function initializeMcpClient() {
   console.log('🔄 Initializing MCP Client to connect to remote Elastic Agent Builder...');
   
@@ -171,6 +176,7 @@ async function initializeMcpClient() {
   console.log('✅ Connected to Elastic Agent Builder MCP Server.');
 
   const result = await mcpClient.listTools();
+  console.log('Available MCP Tools:', result.tools.map(t => t.name).join(', '));
 
   const mapType = (type: string): string => {
     switch (type?.toLowerCase()) {
@@ -517,6 +523,9 @@ app.get('/api/diagnostic', async (req, res) => {
 
   res.json(diagnosticResults);
 });
+
+// Mount the new API router for frontend widgets
+app.use('/api', apiRouter);
 
 // Serve static files from frontend/dist
 const distPath = path.join(__dirname, '../frontend/dist');

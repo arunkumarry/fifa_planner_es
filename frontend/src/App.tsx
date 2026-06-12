@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Calendar, Compass, MessageSquare } from 'lucide-react';
+import { MapPin, Calendar, Compass, MessageSquare, Loader2 } from 'lucide-react';
 import './App.css';
 
 import type { Match, Stadium, Accommodation, Hospital, Weather, Message, ConsoleLog } from './types';
@@ -13,13 +13,6 @@ import { HospitalsWidget } from './components/widgets/HospitalsWidget';
 import { ConsolePanel } from './components/ConsolePanel';
 import { ChatPanel } from './components/ChatPanel';
 
-import DATA_SOURCE from './data.json';
-const MATCHES: Match[] = DATA_SOURCE.matches || [];
-const STADIUMS: Record<string, Stadium> = DATA_SOURCE.stadiums || {};
-const ACCOMMODATIONS: Accommodation[] = DATA_SOURCE.accommodations || [];
-const HOSPITALS: Hospital[] = (DATA_SOURCE as any).hospitals || [];
-const WEATHER_HISTORY: Record<string, Record<string, Weather>> = (DATA_SOURCE.weather || {}) as any;
-
 export default function App() {
   const [selectedMatchId, setSelectedMatchId] = useState<string>('M_2');
   const [chatInput, setChatInput] = useState<string>('');
@@ -30,90 +23,133 @@ export default function App() {
   const [showConsole, setShowConsole] = useState<boolean>(true);
   const [isChatExpanded, setIsChatExpanded] = useState<boolean>(false);
   
+  // Data State
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [stadiums, setStadiums] = useState<Record<string, Stadium>>({});
+  const [activeWeather, setActiveWeather] = useState<Weather | null>(null);
+  const [activeAccommodations, setActiveAccommodations] = useState<Accommodation[]>([]);
+  const [activeHospitals, setActiveHospitals] = useState<Hospital[]>([]);
+  const [teamStats, setTeamStats] = useState<Record<string, any>>({});
+  
+  // Loading State
+  const [isLoadingInitial, setIsLoadingInitial] = useState<boolean>(true);
+  const [isLoadingWidgets, setIsLoadingWidgets] = useState<boolean>(false);
+  
   const chatMessagesRef = useRef<HTMLDivElement>(null);
   const consoleLogsRef = useRef<HTMLDivElement>(null);
-
-  const activeMatch = MATCHES.find(m => m.match_id === selectedMatchId) || MATCHES[0];
-  const activeStadium = STADIUMS[activeMatch.stadium_id] || {
-    stadium_id: 'default',
-    name: 'TBD Stadium',
-    city: activeMatch.city,
-    capacity: 65000,
-    ticket_booking_info: 'Official tickets at fifa.com/tickets.',
-    latitude: 33.9534,
-    longitude: -118.3387
-  };
-  const activeMonth = activeMatch.date && activeMatch.date.split('-')[1] === '06' ? 'June' : 'July';
-  const activeWeather = (WEATHER_HISTORY[activeMatch.city] && WEATHER_HISTORY[activeMatch.city][activeMonth]) || {
-    city: activeMatch.city,
-    month: activeMonth,
-    avg_temp_f: 80,
-    precipitation_chance: 20,
-    conditions: 'Partly Cloudy'
-  };
-
-  const team1Stats = (DATA_SOURCE as any).teamStats?.[activeMatch.team_1];
-  const team2Stats = (DATA_SOURCE as any).teamStats?.[activeMatch.team_2];
-
-  const activeAccommodations = ACCOMMODATIONS
-    .filter(acc => acc.stadium_id === activeMatch.stadium_id)
-    .map(acc => {
-      const distance = getDistanceKm(acc.latitude, acc.longitude, activeStadium.latitude, activeStadium.longitude);
-      return {
-        ...acc,
-        distance_km: parseFloat(distance.toFixed(2)),
-        driving_eta: Math.round((distance / 40) * 60) + 5,
-        walking_eta: Math.round((distance / 5) * 60)
-      };
-    })
-    .sort((a, b) => (a.distance_km || 0) - (b.distance_km || 0));
-
-  const activeHospitals = HOSPITALS
-    .filter(h => h.stadium_id === activeMatch.stadium_id)
-    .map(h => {
-      const distance = h.distance_km !== undefined ? h.distance_km : getDistanceKm(h.latitude, h.longitude, activeStadium.latitude, activeStadium.longitude);
-      return {
-        ...h,
-        distance_km: parseFloat(distance.toFixed(2))
-      };
-    })
-    .sort((a, b) => (a.distance_km || 0) - (b.distance_km || 0));
-
-  useEffect(() => {
-    if (chatMessagesRef.current) {
-      chatMessagesRef.current.scrollTo({ top: chatMessagesRef.current.scrollHeight, behavior: 'smooth' });
-    }
-  }, [chatMessages]);
-
-  useEffect(() => {
-    if (consoleLogsRef.current) {
-      consoleLogsRef.current.scrollTo({ top: consoleLogsRef.current.scrollHeight, behavior: 'smooth' });
-    }
-  }, [consoleLogs]);
-
-  useEffect(() => {
-    addConsoleLog('info', 'Google Cloud Agent Builder: Initializing Gemini Session...');
-    addConsoleLog('info', 'Google Cloud Agent Builder: Connecting to Elastic MCP Server...');
-    triggerMatchPlanLogs(selectedMatchId);
-  }, []);
 
   const addConsoleLog = (type: 'info' | 'tool-call' | 'tool-return' | 'error', text: string) => {
     const timestamp = new Date().toLocaleTimeString();
     setConsoleLogs(prev => [...prev, { timestamp, type, text }]);
   };
 
-  const triggerMatchPlanLogs = (matchId: string) => {
-    addConsoleLog('info', `Triggering match-day planner update for Match ID: ${matchId}`);
-  };
+  useEffect(() => {
+    async function loadInitialData() {
+      try {
+        addConsoleLog('info', 'Fetching live MCP data: matches and stadiums...');
+        const [mRes, sRes, tRes] = await Promise.all([
+          fetch('/api/matches'),
+          fetch('/api/stadiums'),
+          fetch('/api/teams/stats')
+        ]);
+        const mData = await mRes.json();
+        const sData = await sRes.json();
+        const tData = await tRes.json();
+        
+        setMatches(mData);
+        setTeamStats(tData);
+        const stMap: Record<string, Stadium> = {};
+        if (Array.isArray(sData)) {
+          sData.forEach((s: any) => stMap[s.stadium_id] = s);
+        } else {
+          Object.assign(stMap, sData);
+        }
+        setStadiums(stMap);
+        
+        if (mData.length > 0 && !mData.find((m: any) => m.match_id === selectedMatchId)) {
+          setSelectedMatchId(mData[0].match_id);
+        }
+      } catch (e: any) {
+        addConsoleLog('error', 'Failed to fetch initial data: ' + e.message);
+      } finally {
+        setIsLoadingInitial(false);
+      }
+    }
+    loadInitialData();
+  }, []);
+
+  const activeMatch = matches.find(m => m.match_id === selectedMatchId) || matches[0];
+  const activeStadium = activeMatch ? (stadiums[activeMatch.stadium_id] || {
+    stadium_id: 'default', name: 'TBD Stadium', city: activeMatch.city, capacity: 65000, ticket_booking_info: '', latitude: 0, longitude: 0
+  }) : null;
+
+  useEffect(() => {
+    async function loadWidgetData() {
+      if (!activeMatch || !activeStadium) return;
+      setIsLoadingWidgets(true);
+      try {
+        addConsoleLog('info', `Fetching MCP data for Match: ${activeMatch.match_id}`);
+        const [wRes, aRes, hRes] = await Promise.all([
+          fetch(`/api/weather/${encodeURIComponent(activeMatch.city)}`),
+          fetch(`/api/accommodations/${encodeURIComponent(activeStadium.stadium_id)}`),
+          fetch(`/api/hospitals/${encodeURIComponent(activeStadium.stadium_id)}`)
+        ]);
+        const wData = await wRes.json();
+        const aData = await aRes.json();
+        const hData = await hRes.json();
+        
+        let w = null;
+        if (Array.isArray(wData)) {
+          const activeMonth = activeMatch.date && activeMatch.date.split('-')[1] === '06' ? 'June' : 'July';
+          w = wData.find((ww: any) => ww.month === activeMonth) || wData[0];
+        } else {
+          w = wData;
+        }
+        setActiveWeather(w);
+        
+        const processedAcc = Array.isArray(aData) ? aData.map((acc: any) => {
+          const distance = acc.distance_km !== undefined ? acc.distance_km : getDistanceKm(acc.latitude, acc.longitude, activeStadium.latitude, activeStadium.longitude);
+          return {
+            ...acc,
+            distance_km: parseFloat(distance.toFixed(2)),
+            driving_eta: Math.round((distance / 40) * 60) + 5,
+            walking_eta: Math.round((distance / 5) * 60)
+          };
+        }).sort((a: any, b: any) => a.distance_km - b.distance_km) : [];
+        setActiveAccommodations(processedAcc);
+        
+        const processedHosp = Array.isArray(hData) ? hData.map((h: any) => {
+          const distance = h.distance_km !== undefined ? h.distance_km : getDistanceKm(h.latitude, h.longitude, activeStadium.latitude, activeStadium.longitude);
+          return {
+            ...h,
+            distance_km: parseFloat(distance.toFixed(2))
+          };
+        }).sort((a: any, b: any) => a.distance_km - b.distance_km) : [];
+        setActiveHospitals(processedHosp);
+
+      } catch (e: any) {
+        addConsoleLog('error', 'Failed to fetch widget data: ' + e.message);
+      } finally {
+        setIsLoadingWidgets(false);
+      }
+    }
+    loadWidgetData();
+  }, [activeMatch?.match_id, activeStadium?.stadium_id]);
+
+  useEffect(() => {
+    if (chatMessagesRef.current) chatMessagesRef.current.scrollTo({ top: chatMessagesRef.current.scrollHeight, behavior: 'smooth' });
+  }, [chatMessages]);
+  useEffect(() => {
+    if (consoleLogsRef.current) consoleLogsRef.current.scrollTo({ top: consoleLogsRef.current.scrollHeight, behavior: 'smooth' });
+  }, [consoleLogs]);
 
   const handleMatchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newMatchId = e.target.value;
     setSelectedMatchId(newMatchId);
-    triggerMatchPlanLogs(newMatchId);
-
-    const targetMatch = MATCHES.find(m => m.match_id === newMatchId) || MATCHES[0];
+    
+    const targetMatch = matches.find(m => m.match_id === newMatchId);
     if (!targetMatch) return;
-    const targetStadiumName = (STADIUMS[targetMatch.stadium_id] && STADIUMS[targetMatch.stadium_id].name) || 'TBD Venue';
+    const targetStadiumName = stadiums[targetMatch.stadium_id]?.name || 'TBD Venue';
     setChatMessages(prev => [
       ...prev,
       { sender: 'system', text: `Switched dashboard view to ${targetMatch.team_1} vs ${targetMatch.team_2} in ${targetMatch.city}` },
@@ -124,55 +160,50 @@ export default function App() {
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
-
     const userMessage = chatInput.trim();
     setChatMessages(prev => [...prev, { sender: 'user', text: userMessage }]);
     setChatInput('');
-
-    // Let's connect to the real backend!
     try {
       addConsoleLog('tool-call', `Sending message to Vertex AI: "${userMessage}"`);
+      const activeMonth = activeMatch?.date && activeMatch.date.split('-')[1] === '06' ? 'June' : 'July';
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           message: userMessage, 
-          context: {
-            activeMatch,
-            activeStadium,
-            activeMonth
-          }
+          context: { activeMatch, activeStadium, activeMonth }
         })
       });
-
       if (!response.ok) {
         try {
           const errData = await response.json();
-          if (errData.logs && Array.isArray(errData.logs)) {
-            errData.logs.forEach((log: any) => {
-              addConsoleLog(log.type, log.message);
-            });
-          }
+          if (errData.logs && Array.isArray(errData.logs)) errData.logs.forEach((log: any) => addConsoleLog(log.type, log.message));
           throw new Error(errData.error || `HTTP error! status: ${response.status}`);
         } catch {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
       }
-
       const data = await response.json();
-      if (data.logs && Array.isArray(data.logs)) {
-        data.logs.forEach((log: { type: any, message: string }) => {
-          addConsoleLog(log.type, log.message);
-        });
-      } else {
-        addConsoleLog('tool-return', `Backend replied`);
-      }
+      if (data.logs && Array.isArray(data.logs)) data.logs.forEach((log: any) => addConsoleLog(log.type, log.message));
       setChatMessages(prev => [...prev, { sender: 'agent', text: data.reply }]);
     } catch (err: any) {
       addConsoleLog('error', `Failed to connect to backend: ${err.message}`);
-      setChatMessages(prev => [...prev, { sender: 'agent', text: `Sorry, I encountered an error communicating with my backend. Is it running? (${err.message})` }]);
+      setChatMessages(prev => [...prev, { sender: 'agent', text: `Sorry, I encountered an error. (${err.message})` }]);
     }
   };
+
+  if (isLoadingInitial) {
+    return (
+      <div className="app-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'white', flexDirection: 'column', gap: '16px' }}>
+        <Loader2 size={48} className="rotating-football" color="var(--color-primary)" />
+        <h2>Loading Live MCP Data...</h2>
+      </div>
+    );
+  }
+
+  if (!activeMatch || !activeStadium) {
+    return <div className="app-container" style={{ color: 'white', padding: '2rem' }}>Error loading data.</div>;
+  }
 
   return (
     <div className="app-container">
@@ -222,7 +253,7 @@ export default function App() {
               onChange={handleMatchChange}
               className="match-select"
             >
-              {MATCHES.map((m) => (
+              {matches.map((m) => (
                 <option key={m.match_id} value={m.match_id}>
                   {m.team_1} vs {m.team_2} ({m.city})
                 </option>
@@ -231,7 +262,14 @@ export default function App() {
           </div>
         </div>
 
-        <div className="widgets-grid">
+        <div className="widgets-grid" style={{ position: 'relative' }}>
+          {isLoadingWidgets && (
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '12px', color: 'white', flexDirection: 'column', gap: '8px', backdropFilter: 'blur(2px)' }}>
+              <Loader2 size={32} className="rotating-football" color="var(--color-primary)" />
+              <span style={{ fontWeight: 600 }}>Syncing...</span>
+            </div>
+          )}
+
           <div className="glass-card match-banner-card">
             <div className="match-vs-display">
               <div className="team-block"><div className="team-name">{activeMatch.team_1}</div></div>
@@ -245,9 +283,9 @@ export default function App() {
             </div>
           </div>
 
-          <MatchupWidget activeMatch={activeMatch} team1Stats={team1Stats} team2Stats={team2Stats} />
+          <MatchupWidget activeMatch={activeMatch} team1Stats={teamStats[activeMatch.team_1]} team2Stats={teamStats[activeMatch.team_2]} />
           <StadiumWidget activeStadium={activeStadium} />
-          <WeatherWidget activeWeather={activeWeather} />
+          {activeWeather && <WeatherWidget activeWeather={activeWeather} />}
           <AccommodationsWidget activeAccommodations={activeAccommodations} activeStadium={activeStadium} />
           <HospitalsWidget activeHospitals={activeHospitals} activeStadium={activeStadium} />
         </div>
