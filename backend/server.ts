@@ -115,7 +115,7 @@ async function initializeMcpClient() {
   const transport = new StdioClientTransport({
     command: 'npx',
     args: [
-      '-y',
+      '--no-install',
       'mcp-remote',
       kbMcpUrl,
       '--header',
@@ -289,12 +289,18 @@ app.post('/api/chat', async (req, res) => {
     return res.status(500).json({ error: 'MCP client not initialized' });
   }
 
+  const apiLogs: { type: 'tool-call' | 'tool-return' | 'error'; message: string }[] = [];
+
   try {
     const { message, context } = req.body;
 
-    const systemInstructionContent = `You are an AI planner for the FIFA 2026 World Cup.
+    const systemInstructionContent = `You are a helpful, conversational AI planner and assistant for the FIFA 2026 World Cup.
 You have access to MCP tools to look up stadiums, matches, hotels, and weather.
-The user is currently looking at: ${JSON.stringify(context, null, 2)}`;
+The user is currently looking at: ${JSON.stringify(context, null, 2)}
+
+Instructions:
+1. Provide friendly, natural language responses.
+2. DO NOT output, print, or repeat any raw JSON structures of tool results (such as function call responses, API logs, or tool returns) in your chat bubble. Use the tool results to answer the user's questions in a clean, conversational, markdown format.`;
 
     const chat = ai.chats.create({
       model: 'gemini-2.5-flash',
@@ -311,46 +317,119 @@ The user is currently looking at: ${JSON.stringify(context, null, 2)}`;
     let functionCalls = result.functionCalls;
 
     while (functionCalls && functionCalls.length > 0) {
-      const functionCall = functionCalls[0];
-      console.log(`🛠️ Gemini requested tool call: ${functionCall.name}`);
+      const responseParts: any[] = [];
 
-      let mcpResult;
-      try {
-        if (functionCall.name === 'find_nearby_accommodations' || functionCall.name === 'find_nearby_hospitals') {
-          mcpResult = await handleLocalElasticSearch(functionCall.name, functionCall.args);
-        } else {
-          const response = await mcpClient.callTool({
-            name: functionCall.name as string,
-            arguments: functionCall.args as any
-          });
-          mcpResult = response.content;
+      for (const functionCall of functionCalls) {
+        const callMsg = `Gemini requested tool call: ${functionCall.name}(${JSON.stringify(functionCall.args)})`;
+        console.log(`🛠️ ${callMsg}`);
+        apiLogs.push({ type: 'tool-call', message: callMsg });
+
+        let mcpResult;
+        try {
+          if (functionCall.name === 'find_nearby_accommodations' || functionCall.name === 'find_nearby_hospitals') {
+            mcpResult = await handleLocalElasticSearch(functionCall.name, functionCall.args);
+          } else {
+            const response = await mcpClient.callTool({
+              name: functionCall.name as string,
+              arguments: functionCall.args as any
+            });
+            mcpResult = response.content;
+          }
+        } catch (err: any) {
+          mcpResult = [{ type: 'text', text: `Error calling tool: ${err.message}` }];
+          apiLogs.push({ type: 'error', message: `Error executing tool ${functionCall.name}: ${err.message}` });
         }
-      } catch (err: any) {
-        mcpResult = [{ type: 'text', text: `Error calling tool: ${err.message}` }];
+
+        const returnMsg = `Tool ${functionCall.name} returned content`;
+        console.log(`✅ ${returnMsg}:`, mcpResult);
+        
+        let logText = JSON.stringify(mcpResult);
+        if (logText.length > 150) {
+          logText = logText.substring(0, 150) + '...';
+        }
+        apiLogs.push({ type: 'tool-return', message: `${returnMsg}: ${logText}` });
+
+        // Clean up the output data format for Gemini
+        let outputData: any = mcpResult;
+        if (Array.isArray(mcpResult) && mcpResult.length === 1 && mcpResult[0].type === 'text') {
+          try {
+            outputData = JSON.parse(mcpResult[0].text);
+          } catch {
+            outputData = mcpResult[0].text;
+          }
+        }
+
+        const fResponse: any = {
+          name: functionCall.name as string,
+          response: { output: outputData }
+        };
+        if (functionCall.id) {
+          fResponse.id = functionCall.id;
+        }
+        responseParts.push({
+          functionResponse: fResponse
+        });
       }
 
-      console.log(`✅ Tool returned:`, mcpResult);
-
       result = await chat.sendMessage({
-        message: [{
-          functionResponse: {
-            name: functionCall.name as string,
-            response: { result: mcpResult }
-          }
-        }]
+        message: responseParts
       } as any);
 
       functionCalls = result.functionCalls;
     }
 
-    const reply = (result.text as string) || 'No response from model.';
+    let reply = (result.text as string) || 'No response from model.';
+
+    // Clean up any leading JSON block representing the function response that the model might have echoed
+    reply = reply.trim();
+    if (reply.startsWith('{')) {
+      let braceCount = 0;
+      let insideString = false;
+      let escapeNext = false;
+      let jsonEndIndex = -1;
+
+      for (let i = 0; i < reply.length; i++) {
+        const char = reply[i];
+        if (escapeNext) {
+          escapeNext = false;
+          continue;
+        }
+        if (char === '\\') {
+          escapeNext = true;
+          continue;
+        }
+        if (char === '"') {
+          insideString = !insideString;
+          continue;
+        }
+        if (!insideString) {
+          if (char === '{') {
+            braceCount++;
+          } else if (char === '}') {
+            braceCount--;
+            if (braceCount === 0) {
+              jsonEndIndex = i;
+              break;
+            }
+          }
+        }
+      }
+
+      if (jsonEndIndex !== -1) {
+        const stripped = reply.substring(jsonEndIndex + 1).trim();
+        if (stripped.length > 0) {
+          reply = stripped;
+        }
+      }
+    }
+
     console.log(`🤖 Agent: ${reply}`);
 
-    res.json({ reply });
+    res.json({ reply, logs: apiLogs });
 
   } catch (error: any) {
     console.error('Chat error:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, logs: apiLogs });
   }
 });
 
@@ -359,7 +438,7 @@ const distPath = path.join(__dirname, '../frontend/dist');
 app.use(express.static(distPath));
 
 // Fallback to index.html for SPA routing
-app.get('*', (req, res) => {
+app.get('*all', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 

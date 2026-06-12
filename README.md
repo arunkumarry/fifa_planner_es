@@ -1,5 +1,7 @@
 # ⚽ FIFA 2026 Match Day AI Planner & Dashboard
 
+**Live App:** [https://fifa-planner-app-138721499143.us-central1.run.app/](https://fifa-planner-app-138721499143.us-central1.run.app/)
+
 A premium, cyber-neon full-stack dashboard designed for FIFA 2026 World Cup fan services. It orchestrates a Google Gemini 2.5 Flash agent with a remote/hosted Elasticsearch Model Context Protocol (MCP) server to provide real-time matchups, weather patterns, seating ticket info, hotel booking, and emergency medical services.
 
 ---
@@ -25,21 +27,9 @@ A premium, cyber-neon full-stack dashboard designed for FIFA 2026 World Cup fan 
 
 ---
 
-## 🏗️ Implementation Details
+## 🏗️ Architecture Overview
 
-### **1. Unified SDK & Endpoint Isolation**
-To support standard developer API keys, the client initializes the unified Gen AI SDK with Vertex AI explicitly disabled (`vertexai: false`). This guarantees that all model calls bypass Google Cloud environment overrides and route correctly to `generativelanguage.googleapis.com` (AI Studio).
-
-### **2. Stdio Security & API Key Redaction**
-When connecting to the remote Kibana Agent Builder MCP server via `mcp-remote`, the backend captures the standard error (`stderr`) stream of the proxy client. It scans and logs the output in real time while dynamically masking any custom API keys in the Authorization header (`ApiKey [REDACTED]`) to prevent secrets leaking in console stdout logs.
-
-### **3. Dynamic Schema Mapping**
-The backend translates MCP tools into Gemini-compatible `FunctionDeclarations` on the fly. It includes a recursive mapper (`mapProperty`) to gracefully resolve complex schemas (such as `anyOf` parameters, nested objects, and arrays with required `items` structures) into Gemini's JSON schema constraints.
-
-### **4. Local Geo-Distance Fallback Routing**
-Because the remote hosted MCP server exposes parameterless tools for hotels and completely lacks a hospital lookup tool:
-* **Hospitals**: Calls to `find_nearby_hospitals` are intercepted and queried locally using the Elasticsearch client against the `fifa_hospitals` index.
-* **Accommodations**: Calls to `find_nearby_accommodations` are routed locally to perform a `geo_distance` search against `fifa_accommodations`, sorting results by proximity to the active match day coordinates.
+The system uses a React frontend communicating with an Express backend. The backend utilizes the Google Gen AI SDK to interact with Gemini 2.5 Flash. To retrieve context-aware data, the backend securely connects to an Elasticsearch Model Context Protocol (MCP) server, mapping MCP tools to Gemini function declarations on the fly. Fallback geo-distance routing is used for specialized localized queries like nearby hospitals and accommodations.
 
 ---
 

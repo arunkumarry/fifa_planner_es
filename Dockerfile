@@ -17,6 +17,9 @@ RUN npm install --legacy-peer-deps
 # Copy the backend source
 COPY backend/ ./backend/
 
+# Compile backend TypeScript to JavaScript to avoid ts-node memory overhead in production
+RUN npx tsc backend/server.ts --esModuleInterop --moduleResolution node --target ES2022 --module CommonJS
+
 # Copy the built frontend static assets from stage 1
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
@@ -24,5 +27,5 @@ COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 EXPOSE 8080
 ENV PORT=8080
 
-# Run the backend Express server
-CMD ["npm", "run", "start-backend"]
+# Run the compiled backend JavaScript server directly
+CMD ["node", "backend/server.js"]

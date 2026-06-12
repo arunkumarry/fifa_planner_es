@@ -145,11 +145,27 @@ export default function App() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        try {
+          const errData = await response.json();
+          if (errData.logs && Array.isArray(errData.logs)) {
+            errData.logs.forEach((log: any) => {
+              addConsoleLog(log.type, log.message);
+            });
+          }
+          throw new Error(errData.error || `HTTP error! status: ${response.status}`);
+        } catch {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
       }
 
       const data = await response.json();
-      addConsoleLog('tool-return', `Backend replied`);
+      if (data.logs && Array.isArray(data.logs)) {
+        data.logs.forEach((log: { type: any, message: string }) => {
+          addConsoleLog(log.type, log.message);
+        });
+      } else {
+        addConsoleLog('tool-return', `Backend replied`);
+      }
       setChatMessages(prev => [...prev, { sender: 'agent', text: data.reply }]);
     } catch (err: any) {
       addConsoleLog('error', `Failed to connect to backend: ${err.message}`);
