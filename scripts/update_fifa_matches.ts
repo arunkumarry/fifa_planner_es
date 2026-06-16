@@ -53,14 +53,15 @@ async function main() {
 
   // 1. Generate the CSV file
   const outputRows: string[] = [];
-  const header = "match_id,date,date_int,kickoff_at,team_1,team_2,teams_combined,stadium_id,stadium,city,stadium_location,stage,match_display,month,month_num";
+  const header = "match_id,date,date_int,kickoff_at,team_1,team_2,teams_combined,stadium_id,stadium,city,stadium_location,stage,match_display,month,month_num,status,winner,score,summary";
   outputRows.push(header);
 
   for (const r of records) {
     // Note: The power table has stadium_name, we map it to stadium for this specific schema
     const row = [
       r.match_id, r.date, r.date_int, r.kickoff_at, r.team_1, r.team_2, r.teams_combined,
-      r.stadium_id, r.stadium_name, r.city, r.stadium_location, r.stage, r.match_display, r.month, r.month_num
+      r.stadium_id, r.stadium_name, r.city, r.stadium_location, r.stage, r.match_display, r.month, r.month_num,
+      r.status || 'scheduled', r.winner || '', r.score || '', `"${(r.summary || '').replace(/"/g, '""')}"`
     ];
     outputRows.push(row.join(','));
   }
@@ -93,7 +94,11 @@ async function main() {
           stage: { type: 'keyword' },
           match_display: { type: 'text' },
           month: { type: 'keyword' },
-          month_num: { type: 'integer' }
+          month_num: { type: 'integer' },
+          status: { type: 'keyword' },
+          winner: { type: 'keyword' },
+          score: { type: 'keyword' },
+          summary: { type: 'text' }
         }
       }
     }
@@ -119,7 +124,11 @@ async function main() {
       stage: r.stage,
       match_display: r.match_display.replace(/"/g, ''),
       month: r.month,
-      month_num: parseInt(r.month_num, 10)
+      month_num: parseInt(r.month_num, 10),
+      status: r.status || 'scheduled',
+      winner: r.winner || '',
+      score: r.score || '',
+      summary: r.summary || ''
     });
   }
 

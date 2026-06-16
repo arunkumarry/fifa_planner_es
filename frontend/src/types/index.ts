@@ -5,6 +5,10 @@ export interface Match {
   date: string;
   stadium_id: string;
   city: string;
+  status?: string;
+  winner?: string;
+  score?: string;
+  summary?: string;
 }
 
 export interface Stadium {
