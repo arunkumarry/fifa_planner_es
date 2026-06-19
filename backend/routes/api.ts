@@ -171,4 +171,56 @@ router.get('/teams/stats', async (req, res) => {
   }
 });
 
+router.get('/standings/:group', async (req, res) => {
+  try {
+    let group = req.params.group.trim();
+    if (group.length === 1) {
+      group = `Group ${group.toUpperCase()}`;
+    } else if (group.toLowerCase().startsWith('group')) {
+      const parts = group.split(/\s+/);
+      const letter = parts[parts.length - 1].toUpperCase();
+      group = `Group ${letter}`;
+    }
+    
+    const data = await getFromCacheOrFetch(`standings_${group}`, async () => {
+      const response = await esClient.search({
+        index: 'fifa_standings',
+        body: {
+          query: {
+            term: { group: group }
+          },
+          sort: [{ pos: { order: 'asc' } }],
+          size: 10
+        }
+      });
+      return response.hits.hits.map((hit: any) => hit._source);
+    });
+    res.json(data);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/standings', async (req, res) => {
+  try {
+    const data = await getFromCacheOrFetch('all_standings', async () => {
+      const response = await esClient.search({
+        index: 'fifa_standings',
+        body: {
+          query: { match_all: {} },
+          sort: [
+            { group: { order: 'asc' } },
+            { pos: { order: 'asc' } }
+          ],
+          size: 100
+        }
+      });
+      return response.hits.hits.map((hit: any) => hit._source);
+    });
+    res.json(data);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

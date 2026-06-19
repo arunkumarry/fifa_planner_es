@@ -5,6 +5,10 @@ export interface Match {
   date: string;
   stadium_id: string;
   city: string;
+  status?: string;
+  winner?: string;
+  score?: string;
+  summary?: string;
 }
 
 export interface Stadium {
@@ -59,4 +63,18 @@ export interface ConsoleLog {
   timestamp: string;
   type: 'info' | 'tool-call' | 'tool-return' | 'error';
   text: string;
+}
+
+export interface Standing {
+  group: string;
+  pos: number;
+  team: string;
+  pts: number;
+  gp: number;
+  w: number;
+  l: number;
+  d: number;
+  gf: number;
+  ga: number;
+  gd: number;
 }
