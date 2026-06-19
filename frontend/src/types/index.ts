@@ -64,3 +64,17 @@ export interface ConsoleLog {
   type: 'info' | 'tool-call' | 'tool-return' | 'error';
   text: string;
 }
+
+export interface Standing {
+  group: string;
+  pos: number;
+  team: string;
+  pts: number;
+  gp: number;
+  w: number;
+  l: number;
+  d: number;
+  gf: number;
+  ga: number;
+  gd: number;
+}
