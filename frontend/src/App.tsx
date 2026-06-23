@@ -159,10 +159,15 @@ export default function App() {
     const targetMatch = matches.find(m => m.match_id === newMatchId);
     if (!targetMatch) return;
     const targetStadiumName = stadiums[targetMatch.stadium_id]?.name || 'TBD Venue';
+    const isCompleted = targetMatch.status === 'completed';
+    const agentText = isCompleted
+      ? `I've updated the planning dashboard for the ${targetMatch.team_1} vs ${targetMatch.team_2} match at ${targetStadiumName} on ${targetMatch.date}. Let me know if you want to know stats of this match or something like that!`
+      : `I've updated the planning dashboard for the ${targetMatch.team_1} vs ${targetMatch.team_2} match at ${targetStadiumName} on ${targetMatch.date}. Let me know if you want accommodation recommendations under a budget, travel ETAs, or ticketing assistance!`;
+
     setChatMessages(prev => [
       ...prev,
       { sender: 'system', text: `Switched dashboard view to ${targetMatch.team_1} vs ${targetMatch.team_2} in ${targetMatch.city}` },
-      { sender: 'agent', text: `I've updated the planning dashboard for the ${targetMatch.team_1} vs ${targetMatch.team_2} match at ${targetStadiumName} on ${targetMatch.date}. Let me know if you want accommodation recommendations under a budget, travel ETAs, or ticketing assistance!` }
+      { sender: 'agent', text: agentText }
     ]);
   };
 
