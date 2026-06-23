@@ -2,6 +2,8 @@
 
 **Live App:** [https://fifa-planner-app-138721499143.us-central1.run.app/](https://fifa-planner-app-138721499143.us-central1.run.app/)
 
+**GitHub Repository:** [https://github.com/arunkumarry/fifa_planner_es](https://github.com/arunkumarry/fifa_planner_es)
+
 A premium, cyber-neon full-stack dashboard designed for FIFA 2026 World Cup fan services. It orchestrates a Google Gemini 2.5 Flash agent with a remote/hosted Elasticsearch Model Context Protocol (MCP) server to provide real-time matchups, weather patterns, seating ticket info, hotel booking, and emergency medical services.
 
 ---
