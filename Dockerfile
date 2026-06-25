@@ -17,6 +17,9 @@ RUN npm install --legacy-peer-deps
 # Copy the backend source
 COPY backend/ ./backend/
 
+# Copy the data directory
+COPY data/ ./data/
+
 # Compile backend TypeScript to JavaScript to avoid ts-node memory overhead in production
 RUN npx tsc backend/server.ts --esModuleInterop --moduleResolution node --target ES2022 --module CommonJS
 
