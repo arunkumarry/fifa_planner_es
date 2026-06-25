@@ -1,6 +1,7 @@
 import express from 'express';
 import { LRUCache } from 'lru-cache';
 import { getHandleLocalElasticSearch, esClient } from '../server';
+import { runScrapeAndIndex } from '../scraper';
 
 const router = express.Router();
 
@@ -9,6 +10,11 @@ const cache = new LRUCache<string, any>({
   max: 100,
   ttl: 1000 * 60 * 5,
 });
+
+export function clearApiCache() {
+  cache.clear();
+  console.log('⚡ API Cache cleared successfully.');
+}
 
 async function getFromCacheOrFetch(key: string, fetchFn: () => Promise<any>) {
   if (cache.has(key)) {
@@ -218,6 +224,29 @@ router.get('/standings', async (req, res) => {
       return response.hits.hits.map((hit: any) => hit._source);
     });
     res.json(data);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/admin/scrape-and-index', async (req, res) => {
+  try {
+    const authHeader = req.headers['x-admin-token'];
+    const expectedToken = process.env.ADMIN_TOKEN || 'local-fallback-token';
+
+    if (authHeader !== expectedToken) {
+      res.status(401).json({ error: 'Unauthorized: Invalid admin token.' });
+      return;
+    }
+
+    console.log('[API Admin] Triggering manual scrape-and-index request...');
+    const result = await runScrapeAndIndex(esClient);
+    if (result.success) {
+      clearApiCache();
+      res.json({ message: 'Scraping and re-indexing completed successfully.', details: result.message });
+    } else {
+      res.status(500).json({ error: 'Scraper failed', details: result.message });
+    }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

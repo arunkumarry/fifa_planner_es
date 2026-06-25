@@ -10,6 +10,7 @@ import * as path from 'path';
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 import apiRouter from './routes/api';
+import { startScraperScheduler } from './scheduler';
 
 const app = express();
 app.use(cors());
@@ -547,6 +548,7 @@ async function startServer() {
 
   app.listen(PORT, () => {
     console.log(`🚀 Backend server listening on port ${PORT}`);
+    startScraperScheduler();
   });
 }
 
