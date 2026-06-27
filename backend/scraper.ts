@@ -82,13 +82,18 @@ interface ParsedStanding {
 }
 
 async function fetchHtml(url: string, fallbackPath: string): Promise<string> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
   try {
     console.log(`[Scraper] Fetching URL: ${url}`);
     const res = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2.1 Safari/605.1.15'
-      }
+      },
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
     if (res.ok) {
       const text = await res.text();
       if (text && text.trim().length > 0) {
@@ -97,7 +102,12 @@ async function fetchHtml(url: string, fallbackPath: string): Promise<string> {
     }
     console.warn(`[Scraper] Fetch returned non-OK status: ${res.status}. Falling back to local archive.`);
   } catch (err: any) {
-    console.warn(`[Scraper] Fetch failed with error: ${err.message}. Falling back to local archive.`);
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      console.warn(`[Scraper] Fetch to ${url} timed out after 10 seconds. Falling back to local archive.`);
+    } else {
+      console.warn(`[Scraper] Fetch failed with error: ${err.message}. Falling back to local archive.`);
+    }
   }
 
   if (fs.existsSync(fallbackPath)) {
@@ -111,6 +121,7 @@ async function fetchHtml(url: string, fallbackPath: string): Promise<string> {
   }
   throw new Error(`Failed to load content from URL and archive file ${fallbackPath} does not exist.`);
 }
+
 
 function parseEspnMatches(html: string): ParsedMatch[] {
   const $ = cheerio.load(html);
@@ -149,7 +160,15 @@ function parseEspnMatches(html: string): ParsedMatch[] {
   return list;
 }
 
+let isScrapingInProgress = false;
+
 export async function runScrapeAndIndex(esClient: EsClient): Promise<{ success: boolean; message: string }> {
+  if (isScrapingInProgress) {
+    console.log('⚠️ [Scraper] A scraping job is already in progress. Skipping concurrency execution.');
+    return { success: false, message: 'Scraping job already in progress.' };
+  }
+  isScrapingInProgress = true;
+
   console.log('🏁 [Scraper] Starting background scraping and re-indexing job...');
 
   try {
@@ -521,5 +540,7 @@ export async function runScrapeAndIndex(esClient: EsClient): Promise<{ success: 
   } catch (error: any) {
     console.error('💥 [Scraper] Critical Scraper Error:', error);
     return { success: false, message: error.message };
+  } finally {
+    isScrapingInProgress = false;
   }
 }

@@ -244,6 +244,8 @@ router.post('/admin/scrape-and-index', async (req, res) => {
     if (result.success) {
       clearApiCache();
       res.json({ message: 'Scraping and re-indexing completed successfully.', details: result.message });
+    } else if (result.message === 'Scraping job already in progress.') {
+      res.status(409).json({ error: 'Conflict', details: result.message });
     } else {
       res.status(500).json({ error: 'Scraper failed', details: result.message });
     }
