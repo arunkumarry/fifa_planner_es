@@ -160,7 +160,39 @@ function parseEspnMatches(html: string): ParsedMatch[] {
   return list;
 }
 
+function resolveWinnerPlaceholders(matches: any[]): boolean {
+  let resolvedAny = false;
+  for (const m of matches) {
+    if (m.status === 'completed') {
+      const matchIdNum = m.match_id.replace('M_', '');
+      const winner = m.winner;
+      if (winner && winner !== 'Draw') {
+        const placeholder = `W${matchIdNum}`;
+        for (const other of matches) {
+          let otherChanged = false;
+          if (other.team_1 === placeholder) {
+            other.team_1 = winner;
+            otherChanged = true;
+          }
+          if (other.team_2 === placeholder) {
+            other.team_2 = winner;
+            otherChanged = true;
+          }
+          if (otherChanged) {
+            other.match_display = `${other.team_1} vs ${other.team_2} - ${other.stage}`;
+            other.teams_combined = `${other.team_1}|${other.team_2}`;
+            resolvedAny = true;
+            console.log(`🏆 [Scraper] Resolved placeholder ${placeholder} to winner: ${winner} in match ${other.match_id}`);
+          }
+        }
+      }
+    }
+  }
+  return resolvedAny;
+}
+
 let isScrapingInProgress = false;
+
 
 export async function runScrapeAndIndex(esClient: EsClient): Promise<{ success: boolean; message: string }> {
   if (isScrapingInProgress) {
@@ -269,9 +301,24 @@ export async function runScrapeAndIndex(esClient: EsClient): Promise<{ success: 
         'https://www.espn.in/football/fixtures/_/league/fifa.world',
         path.join(__dirname, 'archive/espn.html')
       );
-      scrapedMatches = parseEspnMatches(fixturesHtml);
+      scrapedMatches.push(...parseEspnMatches(fixturesHtml));
     } catch (err: any) {
       console.warn(`[Scraper] Failed to fetch or parse live ESPN fixtures. Falling back to local archive.`);
+    }
+
+    // Day-wise scraping for Round of 32 dates
+    const datesToScrape = ['20260628', '20260629', '20260630', '20260701', '20260702', '20260703'];
+    for (const dateStr of datesToScrape) {
+      try {
+        console.log(`📥 [Scraper] Fetching ESPN fixtures for date: ${dateStr}...`);
+        const dateHtml = await fetchHtml(
+          `https://www.espn.in/football/fixtures/_/date/${dateStr}/league/fifa.world`,
+          path.join(__dirname, 'archive/espn.html')
+        );
+        scrapedMatches.push(...parseEspnMatches(dateHtml));
+      } catch (err: any) {
+        console.warn(`[Scraper] Failed to fetch ESPN fixtures page for date ${dateStr}: ${err.message}`);
+      }
     }
 
     // Always merge matches from the archive fallback to ensure we don't miss any matches that rotated off the live page
@@ -284,25 +331,22 @@ export async function runScrapeAndIndex(esClient: EsClient): Promise<{ success: 
         archiveContent = archiveContent.substring(separatorIdx + 3).trim();
       }
       const archiveMatches = parseEspnMatches(archiveContent);
-      
-      // Merge: if a match from archive is completed, and we don't have it as completed in scrapedMatches, add/update it!
-      for (const archMatch of archiveMatches) {
-        const existingIdx = scrapedMatches.findIndex(m => 
-          (m.awayTeam === archMatch.awayTeam && m.homeTeam === archMatch.homeTeam) ||
-          (m.awayTeam === archMatch.homeTeam && m.homeTeam === archMatch.awayTeam)
-        );
-        if (existingIdx === -1) {
-          scrapedMatches.push(archMatch);
-        } else {
-          // If the archive match is completed, but the scraped one is scheduled, overwrite it with completed!
-          if (archMatch.status === 'completed' && scrapedMatches[existingIdx].status === 'scheduled') {
-            scrapedMatches[existingIdx] = archMatch;
-          }
-        }
-      }
+      scrapedMatches.push(...archiveMatches);
     }
 
-    console.log(`⚽ [Scraper] Loaded total of ${scrapedMatches.length} match fixture records (merged with archive).`);
+    // Deduplicate scraped matches by team names
+    const uniqueScraped: ParsedMatch[] = [];
+    const seenMatchups = new Set<string>();
+    for (const m of scrapedMatches) {
+      const key = [m.awayTeam, m.homeTeam].sort().join('|');
+      if (!seenMatchups.has(key)) {
+        seenMatchups.add(key);
+        uniqueScraped.push(m);
+      }
+    }
+    scrapedMatches = uniqueScraped;
+
+    console.log(`⚽ [Scraper] Loaded total of ${scrapedMatches.length} match fixture records (merged and deduplicated).`);
 
     // 3. Update data/fifa_standings.csv
     if (scrapedStandings.length > 0) {
@@ -326,76 +370,177 @@ export async function runScrapeAndIndex(esClient: EsClient): Promise<{ success: 
       throw new Error('No existing matches found in data/fifa_matches_complete.csv to update.');
     }
 
-    let updatedCount = 0;
+    // Build placeholder maps from standings
+    const placeholderMap: Record<string, string> = {};
+    const thirdPlaceTeams: Record<string, string> = {};
+    
+    // Read standings
+    const standingsFile = path.join(dataDir, 'fifa_standings.csv');
+    const standings = await parseCsvFile<any>(standingsFile);
 
-    for (const scraped of scrapedMatches) {
-      if (scraped.status !== 'completed') continue;
-
-      // Parse score X - Y (where awayTeam score is X, homeTeam score is Y)
-      const scoreParts = scraped.scoreOrVs.split('-');
-      if (scoreParts.length !== 2) continue;
-
-      const awayGoals = parseInt(scoreParts[0].trim(), 10);
-      const homeGoals = parseInt(scoreParts[1].trim(), 10);
-      if (isNaN(awayGoals) || isNaN(homeGoals)) continue;
-
-      // Find matching scheduled match in our CSV
-      const matchedIdx = existingMatches.findIndex(m => {
-        const t1Normalized = normalizeTeamName(m.team_1);
-        const t2Normalized = normalizeTeamName(m.team_2);
-        return (t1Normalized === scraped.awayTeam && t2Normalized === scraped.homeTeam) ||
-               (t1Normalized === scraped.homeTeam && t2Normalized === scraped.awayTeam);
-      });
-
-      if (matchedIdx !== -1) {
-        const match = existingMatches[matchedIdx];
+    if (standings.length > 0) {
+      const groupTeams: Record<string, string[]> = {};
+      for (const s of standings) {
+        const g = s.group;
+        if (!g || s.pos === 'Pos') continue;
+        const pos = parseInt(s.pos, 10);
+        if (isNaN(pos)) continue;
         
-        // Only update if it is not already completed
-        if (match.status !== 'completed') {
-          const t1Normalized = normalizeTeamName(match.team_1);
-          
-          let t1Goals = 0;
-          let t2Goals = 0;
-          let winnerName = 'Draw';
-
-          if (t1Normalized === scraped.awayTeam) {
-            t1Goals = awayGoals;
-            t2Goals = homeGoals;
-          } else {
-            t1Goals = homeGoals;
-            t2Goals = awayGoals;
-          }
-
-          if (t1Goals > t2Goals) {
-            winnerName = match.team_1;
-          } else if (t2Goals > t1Goals) {
-            winnerName = match.team_2;
-          }
-
-          const scoreStr = `${t1Goals}-${t2Goals}`;
-
-          let summaryStr = '';
-          if (winnerName === 'Draw') {
-            summaryStr = `A hard-fought draw ending ${scoreStr} between ${match.team_1} and ${match.team_2}.`;
-          } else {
-            const loserName = winnerName === match.team_1 ? match.team_2 : match.team_1;
-            summaryStr = `${winnerName} secured a decisive victory over ${loserName} with a final score of ${scoreStr}.`;
-          }
-
-          match.status = 'completed';
-          match.score = scoreStr;
-          match.winner = winnerName;
-          match.summary = summaryStr;
-
-          updatedCount++;
-          console.log(`✏️ [Scraper] Updated match: ${match.team_1} vs ${match.team_2} -> ${scoreStr}`);
+        const cleanTeam = s.team.trim().replace(/[\s\-\u00a0]+$/, '');
+        if (!groupTeams[g]) {
+          groupTeams[g] = [];
+        }
+        groupTeams[g][pos - 1] = cleanTeam;
+      }
+      
+      const groupLetters = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+      for (const letter of groupLetters) {
+        const groupName = `Group ${letter}`;
+        const teams = groupTeams[groupName] || [];
+        if (teams[0]) placeholderMap[`1${letter}`] = teams[0];
+        if (teams[1]) placeholderMap[`2${letter}`] = teams[1];
+        if (teams[2]) {
+          placeholderMap[`3${letter}`] = teams[2];
+          thirdPlaceTeams[`3${letter}`] = teams[2];
         }
       }
     }
 
-    console.log(`📝 [Scraper] Updated ${updatedCount} matches to completed status.`);
+    let placeholdersResolved = false;
+    const isWildcard = (p: string) => p.startsWith('3') && p.length > 2;
 
-    if (updatedCount > 0) {
+    const teamMatchesPlaceholder = (actual: string, placeholder: string): boolean => {
+      if (placeholderMap[placeholder] === actual) return true;
+      if (isWildcard(placeholder)) {
+        const allowedGroups = placeholder.substring(1).split('');
+        for (const [key, val] of Object.entries(thirdPlaceTeams)) {
+          if (val === actual) {
+            const groupLetter = key.charAt(1);
+            return allowedGroups.includes(groupLetter);
+          }
+        }
+      }
+      return false;
+    };
+
+    const resolveMatchup = (m: any, scraped: ParsedMatch) => {
+      const t1Placeholder = m.team_1.trim();
+      const t2Placeholder = m.team_2.trim();
+      const sAway = scraped.awayTeam;
+      const sHome = scraped.homeTeam;
+
+      if (teamMatchesPlaceholder(sAway, t1Placeholder) && teamMatchesPlaceholder(sHome, t2Placeholder)) {
+        return { matched: true, team_1: sAway, team_2: sHome };
+      }
+      if (teamMatchesPlaceholder(sHome, t1Placeholder) && teamMatchesPlaceholder(sAway, t2Placeholder)) {
+        return { matched: true, team_1: sHome, team_2: sAway };
+      }
+      if (placeholderMap[t1Placeholder] === sAway && isWildcard(t2Placeholder)) {
+        return { matched: true, team_1: sAway, team_2: sHome };
+      }
+      if (placeholderMap[t1Placeholder] === sHome && isWildcard(t2Placeholder)) {
+        return { matched: true, team_1: sHome, team_2: sAway };
+      }
+      if (placeholderMap[t2Placeholder] === sAway && isWildcard(t1Placeholder)) {
+        return { matched: true, team_1: sHome, team_2: sAway };
+      }
+      if (placeholderMap[t2Placeholder] === sHome && isWildcard(t1Placeholder)) {
+        return { matched: true, team_1: sAway, team_2: sHome };
+      }
+      return { matched: false };
+    };
+
+    let updatedCount = 0;
+
+    for (const scraped of scrapedMatches) {
+      // Find matching scheduled match in our CSV
+      const matchedIdx = existingMatches.findIndex(m => {
+        const t1Normalized = normalizeTeamName(m.team_1);
+        const t2Normalized = normalizeTeamName(m.team_2);
+        if ((t1Normalized === scraped.awayTeam && t2Normalized === scraped.homeTeam) ||
+            (t1Normalized === scraped.homeTeam && t2Normalized === scraped.awayTeam)) {
+          return true;
+        }
+        return resolveMatchup(m, scraped).matched;
+      });
+
+      if (matchedIdx !== -1) {
+        const match = existingMatches[matchedIdx];
+        const res = resolveMatchup(match, scraped);
+
+        // Resolve placeholders to actual team names
+        if (res.matched && res.team_1 && res.team_2) {
+          const oldT1 = match.team_1;
+          const oldT2 = match.team_2;
+          if (match.team_1 !== res.team_1 || match.team_2 !== res.team_2) {
+            match.team_1 = res.team_1;
+            match.team_2 = res.team_2;
+            match.teams_combined = `${res.team_1}|${res.team_2}`;
+            match.match_display = `${res.team_1} vs ${res.team_2} - ${match.stage}`;
+            placeholdersResolved = true;
+            console.log(`✨ [Scraper] Resolved placeholders for ${match.match_id}: ${oldT1} vs ${oldT2} -> ${res.team_1} vs ${res.team_2}`);
+          }
+        }
+
+        // Only update if it is completed in scraped matches and not already completed in database
+        if (scraped.status === 'completed' && match.status !== 'completed') {
+          // Parse score X - Y (where awayTeam score is X, homeTeam score is Y)
+          const scoreParts = scraped.scoreOrVs.split('-');
+          if (scoreParts.length === 2) {
+            const awayGoals = parseInt(scoreParts[0].trim(), 10);
+            const homeGoals = parseInt(scoreParts[1].trim(), 10);
+            
+            if (!isNaN(awayGoals) && !isNaN(homeGoals)) {
+              const t1Normalized = normalizeTeamName(match.team_1);
+              let t1Goals = 0;
+              let t2Goals = 0;
+              let winnerName = 'Draw';
+
+              if (t1Normalized === scraped.awayTeam) {
+                t1Goals = awayGoals;
+                t2Goals = homeGoals;
+              } else {
+                t1Goals = homeGoals;
+                t2Goals = awayGoals;
+              }
+
+              if (t1Goals > t2Goals) {
+                winnerName = match.team_1;
+              } else if (t2Goals > t1Goals) {
+                winnerName = match.team_2;
+              }
+
+              const scoreStr = `${t1Goals}-${t2Goals}`;
+              let summaryStr = '';
+              if (winnerName === 'Draw') {
+                summaryStr = `A hard-fought draw ending ${scoreStr} between ${match.team_1} and ${match.team_2}.`;
+              } else {
+                const loserName = winnerName === match.team_1 ? match.team_2 : match.team_1;
+                summaryStr = `${winnerName} secured a decisive victory over ${loserName} with a final score of ${scoreStr}.`;
+              }
+
+              match.status = 'completed';
+              match.score = scoreStr;
+              match.winner = winnerName;
+              match.summary = summaryStr;
+
+              updatedCount++;
+              console.log(`✏️ [Scraper] Updated completed match: ${match.team_1} vs ${match.team_2} -> ${scoreStr}`);
+            }
+          }
+        }
+      }
+    }
+
+    // Resolve any subsequent round winner placeholders (e.g. W73, W75) based on newly completed matches
+    const winnersResolved = resolveWinnerPlaceholders(existingMatches);
+    if (winnersResolved) {
+      placeholdersResolved = true;
+    }
+
+    console.log(`📝 [Scraper] Updated ${updatedCount} matches to completed. Placeholders resolved: ${placeholdersResolved}`);
+
+    if (updatedCount > 0 || placeholdersResolved) {
       // Save data/fifa_matches_complete.csv
       const completeMatchesHeader = "match_id,date,date_int,kickoff_at,team_1,team_2,teams_combined,stage,stadium_id,stadium_name,city,stadium_capacity,stadium_location,month,month_num,day,avg_temp_f,temp_category,weather_conditions,precipitation_chance,rain_risk,match_display,venue_display,weather_display,status,score,winner,summary\n";
       const completeMatchesFields = ["match_id","date","date_int","kickoff_at","team_1","team_2","teams_combined","stage","stadium_id","stadium_name","city","stadium_capacity","stadium_location","month","month_num","day","avg_temp_f","temp_category","weather_conditions","precipitation_chance","rain_risk","match_display","venue_display","weather_display","status","score","winner","summary"];
@@ -467,7 +612,7 @@ export async function runScrapeAndIndex(esClient: EsClient): Promise<{ success: 
     }
 
     // 7. Ingest Matches into Elasticsearch
-    if (updatedCount > 0) {
+    if (updatedCount > 0 || placeholdersResolved) {
       console.log('⚽ [Elasticsearch] Re-indexing matches...');
       const matchesIndex = 'fifa_matches';
       if (await esClient.indices.exists({ index: matchesIndex })) {
@@ -535,7 +680,7 @@ export async function runScrapeAndIndex(esClient: EsClient): Promise<{ success: 
     }
 
     console.log('🎉 [Scraper] Scraping and indexing completed successfully!');
-    return { success: true, message: `Scraped successfully. Updated ${updatedCount} matches.` };
+    return { success: true, message: `Scraped successfully. Updated ${updatedCount} matches. Placeholders resolved: ${placeholdersResolved}.` };
 
   } catch (error: any) {
     console.error('💥 [Scraper] Critical Scraper Error:', error);
